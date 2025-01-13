@@ -4,7 +4,7 @@ import Assert from "@asserts/Assert";
 import UIActions from "@uiActions/UIActions";
 import PDFUtil from "@utils/PDFUtil";
 import CommonConstants from "@uiConstants/CommonConstants";
-import ConfigurationConstants from "@uiConstants/ConfigurationConstants";
+import testConstans from "@uiConstants/TestConstants";
 
 export default class ConfigurationSteps {
     private ui: UIActions;
@@ -17,7 +17,7 @@ export default class ConfigurationSteps {
         let fileName: string;
         await test.step(`Downloading the AOS backend PDF file`, async () => {
             fileName = await this.ui.downloadFile(ConfigurationPage.AOS_BACK_END_LINK,
-                ConfigurationConstants.AOS_BACKEND);
+                testConstans.AOS_BACKEND);
         });
         return fileName;
     }

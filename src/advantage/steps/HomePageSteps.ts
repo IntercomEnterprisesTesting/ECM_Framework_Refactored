@@ -1,16 +1,16 @@
 import Assert from "@asserts/Assert";
 import HomaPage from "@pages/HomePage";
-import { Page } from "@playwright/test";
-// eslint-disable-next-line import/extensions
 import UIActions from "@uiActions/UIActions";
-// import CommonConstants from "../constants/CommonConstants";
+import FolderNavigationUtil from "@utils/FolderNavigationUtil";
 import LinkUtil from "@utils/LinkUtil";
 
 export default class HomePageSteps {
     private uiActions: UIActions;
+    private folderNavigation: FolderNavigationUtil;
 
-    constructor(private page: Page) {
-        this.uiActions = new UIActions(page);
+    constructor(uiActions: UIActions, folderNavigation: FolderNavigationUtil) {
+        this.uiActions = uiActions;
+        this.folderNavigation = folderNavigation;
     }
     private async waitForHomePageLoad() {
         // Wait for a specific element to be visible that indicates the page has fully loaded
@@ -27,13 +27,11 @@ export default class HomePageSteps {
     }
     private async verifyMenuIsOpened() {
         await this.uiActions.element(HomaPage.OPENED_SIDE_MENU, "Opened Side Menu").waitTillVisible(5);
-}
-
+    }
     public async verifyFileAdded(fileName : string) {
         const fileLinkLocator = LinkUtil.getLinkSelector(fileName);
         await Assert.assertVisible(fileLinkLocator, `Link for ${fileName}`);
     } 
-
     private async deleteFile(fileName: string) {
         const fileLinkLocator = LinkUtil.getLinkSelector(fileName);
         await this.uiActions.element(fileLinkLocator, `Link for ${fileName}`).rightClick();
@@ -58,14 +56,14 @@ export default class HomePageSteps {
         await this.uiActions.element(HomaPage.PROFILE_MENU_BUTTON, "Properties Button").click();
         await Assert.assertVisible(HomaPage.PROPERTIES_WINDOW_DIV, "Properties Window");
         // return new propertiesPage(this.page)
-        } 
+    } 
     public async checkOutFile(fileName: string) {
         const fileLinkLocator = LinkUtil.getLinkSelector(fileName);    
         await this.uiActions.element(fileLinkLocator, `Link for ${fileName}`).rightClick();
         await this.uiActions.element(HomaPage.CHECK_OUT_BUTTON, "Check Out Button").hover();
         await this.uiActions.element(HomaPage.CHECK_OUT_ONLY_BUTTON, "Check Out Button").click();
         await Assert.assertVisible(HomaPage.CHECK_OUT_IMG, "Check Out Image");
-        } 
+    } 
     public async checkInFile(fileName: string) {
         const fileLinkLocator = LinkUtil.getLinkSelector(fileName);
         await this.uiActions.element(fileLinkLocator, `Link for ${fileName}`).rightClick();
@@ -73,13 +71,13 @@ export default class HomePageSteps {
         // return new checkInPage(this.page);
     }
     public async navigateToBrowse() {
-        // Wait for the side menu button to be visible
         await this.waitForHomePageLoad();
+        await this.clickSideMenuButton();
+        await this.verifyMenuIsOpened();
+        // Wait for the side menu button to be visible
         // Click the side menu button
         await this.clickBrowseButton();
-        await this.verifyMenuIsOpened();
         // Click the browse button
-        await this.clickBrowseButton();
     }
     public async navigateToSearch() {
     // Wait for the side menu button to be visible
@@ -94,12 +92,12 @@ export default class HomePageSteps {
         await this.uiActions.element(HomaPage.SEARCH_TEXTBOX, "Search Field").waitTillVisible(5);
     // return new searchPage (this.page);
     }
-    public async navigateToAddDocumentPage() {
+    public async navigateToAddDocumentPage(folderName: string) {
         await this.clickSideMenuButton();
         await this.clickBrowseButton();
+        await this.folderNavigation.navigateToFolder(folderName);
         await this.uiActions.element(HomaPage.ADD_DOCUMENT_BUTTON, "Add Document Button").click();
         // expect the add document window to be displayed
         await this.uiActions.element(HomaPage.ADD_DOCUMENT_WINDOWS_DIV, "Add Document Window").waitTillVisible(5);
-        // return new addwindowpage
     }
 }
