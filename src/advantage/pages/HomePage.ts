@@ -1,7 +1,9 @@
+import TestConstants from "@uiConstants/TestConstants";
+
 /* eslint-disable max-len */
-export default class HomaPage {    
+export default class HomePage {    
     static readonly FAVOURITES_BUTTON = '//div[@role="tree" and @aria-label="Favorites Tree"]';
-    static readonly OPENED_SIDE_MENU = '//div[@data-dojo-attach-point="featureList" and contains(@class, "bannerFeatureListOpened")]';
+    static readonly OPENED_SIDE_MENU = '//nav[@class="featureListPane"]';
     static readonly SIDE_MENU_BUTTON = '//div[@data-dojo-attach-point="featureList" and @class="bannerFeatureList"]';
     static readonly BROWSE_BUTTON = '//tr[@role="menuitem" and @aria-label="Browse "]';
     static readonly ADD_DOCUMENT_BUTTON = '//div[@aria-label="Browse Content List"]//span[@class="dijitReset dijitInline dijitButtonText" and text()="Add Document"]';
@@ -23,4 +25,5 @@ export default class HomaPage {
     static readonly PROFILE_MENU_BUTTON = '//span[contains(@title,"User session for")]';
     static readonly LOGOUT_BUTTON = '//td[contains(text(),"Log Out")]';
     static readonly PROPERTIES_MENU_BUTTON = '//table[contains(@class,"dijitMenuActive")]//td[text()="Properties"]';
+    static readonly TEST_FILE_SELECTOR = `//a[@class="anchorLink" and text() ='${TestConstants.TEST_FILE_NAME}']`;
 }

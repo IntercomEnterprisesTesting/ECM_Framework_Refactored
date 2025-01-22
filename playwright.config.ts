@@ -38,8 +38,8 @@ const config: PlaywrightTestConfig = {
   reporter: [
     ["dot"],
     ["allure-playwright", {
-      detail: false,
-      suiteTitle: false,
+      detail: true,
+      suiteTitle: true,
       environmentInfo: {
         OS: process.platform.toUpperCase(),
         BROWSER: process.env.BROWSER.toUpperCase(),

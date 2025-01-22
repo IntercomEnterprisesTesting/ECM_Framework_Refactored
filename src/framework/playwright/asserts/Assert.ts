@@ -1,4 +1,6 @@
-import { test, expect } from "@playwright/test";
+import {
+     test, expect, Locator, Page,
+    } from '@playwright/test';
 
 export default class Assert {
     /**
@@ -100,7 +102,8 @@ export default class Assert {
     public static async assertVisible(element :any, description: string, softAssert = false) {
         await test.step(`Verifying that ${description} is Visible`, async () => {
             try {
-                await expect(element).toBeVisible();
+                const locator : Locator = element.locator();
+                await expect(locator).toBeVisible({ timeout: 5000 });
             } catch (error) {
                 if (!softAssert) {
                     throw new Error(error);
@@ -229,6 +232,23 @@ export default class Assert {
         await test.step(`Verifying that ${description} is empty`, async () => {
             try {
                 await expect(value, `Expected is 'Empty' & Actual is '${value}'`).toBeEmpty();
+            } catch (error) {
+                if (!softAssert) {
+                    throw new Error(error);
+                }
+            }
+        });
+    }
+    /**
+     * To verify that an element identified by a selector is visible
+     * @param selector - the selector of the element to check
+     * @param description - description of the element that is being validated
+     * @param softAssert - for soft asserts this has to be set to true, else this can be ignored
+     */
+    public static async assertElementVisible(locator: Locator, description: string, softAssert = false) {
+        await test.step(`Verifying that ${description} is visible`, async () => {
+            try {
+                await expect(locator).toBeVisible({ timeout: 5000 });
             } catch (error) {
                 if (!softAssert) {
                     throw new Error(error);

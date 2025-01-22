@@ -177,7 +177,8 @@ export default class UIActions {
    */
   public async waitForDomContentLoaded() {
     await test.step(`Waiting for load event`, async () => {
-      await this.page.waitForLoadState("domcontentloaded", { timeout: 5000 });
+      await this.page.waitForLoadState("domcontentloaded", { timeout: 10000 });
+      await this.page.waitForLoadState("networkidle", { timeout: 10000 });
     });
   }
 

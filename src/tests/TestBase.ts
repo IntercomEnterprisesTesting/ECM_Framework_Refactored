@@ -4,37 +4,43 @@ import {
 import LoginPageSteps from '@uiSteps/LoginPageSteps';
 import HomePageSteps from '@uiSteps/HomePageSteps';
 import UIActions from '@uiActions/UIActions';
-import ExcelDataProcessor from 'excelProcessor/excelDateProcessor';
-import FolderProcessor from 'excelProcessor/FolderProcessor';
 import UsersReader from 'excelProcessor/usersReader';
 import FolderNavigationUtil from '@utils/FolderNavigationUtil';
+import { Folder, DocumentClass } from 'excelProcessor/types';
+import DataBuilder from 'excelProcessor/DataBuilder';
+import AddDocumentPageSteps from '@uiSteps/AddDocumentPageSteps';
+import AttributeUtil from '@utils/AttributeUtil';
 
 export default class TestBase {
      browser: Browser;
      context: BrowserContext;
      page: Page;
      login: LoginPageSteps;
-     home: HomePageSteps;
+     homeSteps: HomePageSteps;
      uiActions: UIActions;
-     excel: ExcelDataProcessor;
-     folderProcessor: FolderProcessor;
+     excel: DataBuilder;
      usersReader: UsersReader;
      folderNavigationUtil: FolderNavigationUtil;
+     foldersMap: Map<string, Folder>;
+     addDocument: AddDocumentPageSteps;
+     attributeUtil: AttributeUtil;
+     defaultFolder: string;
 
     constructor() {
         base.beforeAll(async ({ browser }) => {
             this.browser = browser;
             this.context = await this.browser.newContext();
             this.page = await this.context.newPage();
-            this.excel = new ExcelDataProcessor();
-            const defaultFolder = this.excel.getDefaultFolder();
-            console.log(`Default folder is ${defaultFolder}`);
+            this.excel = new DataBuilder();
+            this.foldersMap = this.excel.getFoldersMap();
+            this.defaultFolder = this.excel.getDefaultFolder();
             this.uiActions = new UIActions(this.page);
-            this.folderNavigationUtil = new FolderNavigationUtil(this.uiActions, this.excel);
+            this.folderNavigationUtil = new FolderNavigationUtil(this.uiActions, this.excel, this.page);
             this.usersReader = new UsersReader();
-            this.folderProcessor = new FolderProcessor();
+            this.attributeUtil = new AttributeUtil(this.page);
             this.login = new LoginPageSteps(this.page, this.uiActions, this.usersReader);
-            this.home = new HomePageSteps(this.uiActions, this.folderNavigationUtil);
+            this.addDocument = new AddDocumentPageSteps(this.uiActions, this.attributeUtil);
+            this.homeSteps = new HomePageSteps(this.uiActions, this.folderNavigationUtil, this.addDocument);
         });
 
         // base.afterAll(async () => {

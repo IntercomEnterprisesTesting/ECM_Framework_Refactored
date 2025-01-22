@@ -13,7 +13,6 @@ export default class UsersReader {
         let filePath: string;
         try {
             filePath = path.resolve(TestConstants.USERS_FILE);
-            console.log(`Reading users from ${filePath}`);
             this.workbook = XLSX.readFile(filePath);
         } catch (error) {
             throw new Error(`Error resolving file path: ${error.message}`);
@@ -30,7 +29,6 @@ export default class UsersReader {
         const userData = this.usersData[user];
         const userName = userData['username'];
         const password = userData['password'];
-        console.log(`User name: ${userName}`);
         return [userName, password];
     }
 }

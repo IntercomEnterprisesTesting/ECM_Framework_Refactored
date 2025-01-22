@@ -268,7 +268,19 @@ export default class UIElementActions {
       await this.getLocator().press(key);
     });
   }
-
+  /**
+   * checks if element is disabled
+   * @returns Promise<boolean>
+   */
+  public async isDisabled(sec: number): Promise<boolean> {
+    let status: boolean;
+    await test.step(`Checking if ${this.description} is disabled`, async () => {
+      const element = this.getLocator();
+      await element.waitFor();
+      status = await element.isDisabled();
+    });
+    return status;
+  }
   /**
    * Get all the text Content
    * @returns

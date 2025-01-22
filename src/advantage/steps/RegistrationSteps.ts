@@ -4,7 +4,7 @@ import Assert from "@asserts/Assert";
 import StringUtil from "@utils/StringUtil";
 import CommonConstants from "@uiConstants/CommonConstants";
 import RegistrationPageConstants from "@uiConstants/RegistrationPageConstants";
-import HomaPage from "@pages/HomePage";
+import HomePage from "@pages/HomePage";
 
 export default class RegistrationSteps {
     private ui: UIActions;
@@ -34,32 +34,32 @@ export default class RegistrationSteps {
         let userName: string;
         await test.step(`Create New Account`, async () => {
             userName = StringUtil.randomAlphabeticString(CommonConstants.TEN);
-            await this.ui.editBox(HomaPage.USER_NAME_TEXTBOX,
+            await this.ui.editBox(HomePage.USER_NAME_TEXTBOX,
                 RegistrationPageConstants.USER_NAME).fill(userName);
-            await this.ui.editBox(HomaPage.EMAIL_TEXTBOX, RegistrationPageConstants.EMAIL).fill(email);
-            await this.ui.editBox(HomaPage.PASSWORD_TEXTBOX, RegistrationPageConstants.PASSWORD).fill(password);
-            await this.ui.editBox(HomaPage.PASSWORD_CONFIRM_TEXTBOX, RegistrationPageConstants.CONFIRM_PASSWORD)
+            await this.ui.editBox(HomePage.EMAIL_TEXTBOX, RegistrationPageConstants.EMAIL).fill(email);
+            await this.ui.editBox(HomePage.PASSWORD_TEXTBOX, RegistrationPageConstants.PASSWORD).fill(password);
+            await this.ui.editBox(HomePage.PASSWORD_CONFIRM_TEXTBOX, RegistrationPageConstants.CONFIRM_PASSWORD)
                 .fill(confirmPassword);
-            await this.ui.editBox(HomaPage.FIRST_NAME_TEXTBOX, RegistrationPageConstants.FIRST_NAME)
+            await this.ui.editBox(HomePage.FIRST_NAME_TEXTBOX, RegistrationPageConstants.FIRST_NAME)
                 .fill(firstName);
-            await this.ui.editBox(HomaPage.LAST_NAME_TEXTBOX, RegistrationPageConstants.LAST_NAME)
+            await this.ui.editBox(HomePage.LAST_NAME_TEXTBOX, RegistrationPageConstants.LAST_NAME)
                 .fill(lastName);
-            await this.ui.editBox(HomaPage.PHONE_NUMBER_TEXTBOX, RegistrationPageConstants.PHONE_NUMBER)
+            await this.ui.editBox(HomePage.PHONE_NUMBER_TEXTBOX, RegistrationPageConstants.PHONE_NUMBER)
                 .fill(phoneNumber);
-            await this.ui.dropdown(HomaPage.COUNTRY_DROPDOWN, RegistrationPageConstants.COUNTRY)
+            await this.ui.dropdown(HomePage.COUNTRY_DROPDOWN, RegistrationPageConstants.COUNTRY)
                 .selectByVisibleText(country);
-            await this.ui.editBox(HomaPage.CITY_TEXTBOX, RegistrationPageConstants.CITY).fill(city);
-            await this.ui.editBox(HomaPage.ADDRESS_TEXTBOX, RegistrationPageConstants.ADDRESS).fill(address);
-            await this.ui.editBox(HomaPage.STATE_TEXTBOX, RegistrationPageConstants.STATE).fill(state);
-            await this.ui.editBox(HomaPage.POSTAL_CODE_TEXTBOX, RegistrationPageConstants.POSTAL_CODE)
+            await this.ui.editBox(HomePage.CITY_TEXTBOX, RegistrationPageConstants.CITY).fill(city);
+            await this.ui.editBox(HomePage.ADDRESS_TEXTBOX, RegistrationPageConstants.ADDRESS).fill(address);
+            await this.ui.editBox(HomePage.STATE_TEXTBOX, RegistrationPageConstants.STATE).fill(state);
+            await this.ui.editBox(HomePage.POSTAL_CODE_TEXTBOX, RegistrationPageConstants.POSTAL_CODE)
                 .fill(postalCode);
-            await Assert.assertTrue(await this.ui.checkbox(HomaPage.PROMOTION_CHECKBOX,
+            await Assert.assertTrue(await this.ui.checkbox(HomePage.PROMOTION_CHECKBOX,
                 RegistrationPageConstants.PROMOTION).isChecked(), RegistrationPageConstants.PROMOTION);            
             if (allowOffersPromotion.toLowerCase() === CommonConstants.FALSE) {
-                await this.ui.checkbox(HomaPage.PROMOTION_CHECKBOX, RegistrationPageConstants.PROMOTION)
+                await this.ui.checkbox(HomePage.PROMOTION_CHECKBOX, RegistrationPageConstants.PROMOTION)
                     .uncheck();
             }
-            await this.ui.checkbox(HomaPage.PRIVACY_POLICY_CHECKBOX,
+            await this.ui.checkbox(HomePage.PRIVACY_POLICY_CHECKBOX,
                 RegistrationPageConstants.TERMS_AND_CONDITIONS).check();
         });
         return userName;
@@ -69,7 +69,7 @@ export default class RegistrationSteps {
      */
     public async saveRegistration() {
         await test.step(`Save registration details`, async () => {
-            await this.ui.element(HomaPage.REGISTER_BUTTON, RegistrationPageConstants.REGISTER_BUTTON).click();
+            await this.ui.element(HomePage.REGISTER_BUTTON, RegistrationPageConstants.REGISTER_BUTTON).click();
         });
     }
     /**
@@ -77,7 +77,7 @@ export default class RegistrationSteps {
      */
     public async alreadyHaveAccount() {
         await test.step(`Click on Already have an account link`, async () => {
-            await this.ui.element(HomaPage.ALREADY_HAVE_AN_ACCOUNT_LINK,
+            await this.ui.element(HomePage.ALREADY_HAVE_AN_ACCOUNT_LINK,
                 RegistrationPageConstants.ALREADY_HAVE_AN_ACCOUNT_LINK).click();
         });
     }

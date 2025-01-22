@@ -1,17 +1,22 @@
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable max-len */
 import Assert from "@asserts/Assert";
 import AddDocumentPage from "@pages/AddDocumentPage";
 // eslint-disable-next-line import/extensions
 import UIActions from "@uiActions/UIActions";
+import TestConstants from "@uiConstants/TestConstants";
 // import CommonConstants from "../constants/CommonConstants";
 import AttributeUtil from "@utils/AttributeUtil";
+import DataBuilder from "excelProcessor/DataBuilder";
 
 export default class AddDocumentPageSteps {
     private uiActions: UIActions;
     private attributeUtil: AttributeUtil;
+    private excel: DataBuilder;
     constructor(uiActions: UIActions, attributeUtil: AttributeUtil) {
         this.uiActions = uiActions;
         this.attributeUtil = attributeUtil;
+        this.excel = new DataBuilder();
     }
 
     async clickUploadFileButton() {
@@ -26,27 +31,59 @@ export default class AddDocumentPageSteps {
         const attributeSelector = await this.attributeUtil.createAttributeInputSelector(attibuteName);
         await this.uiActions.editBox(attributeSelector, attibuteName).fill(value);
     }
-    async uploadFile(filePath:string) {
-        await this.uiActions.element(AddDocumentPage.FILE_INPUT, "file input").setInputFiles(filePath);
+    public async setUploadFilePath() {
+        await this.uiActions.element(AddDocumentPage.FILE_INPUT, "file input").setInputFiles(TestConstants.TEST_FILE_PATH);
         } 
-    async confirmAddFile() {
+    public async clickAddButton() {
         // eslint-disable-next-line max-len
-        await this.uiActions.element(AddDocumentPage.ADD_FILE_BUTTON, "Confirm Add File Button").scrollIntoView();
         await this.uiActions.element(AddDocumentPage.ADD_FILE_BUTTON, "Confirm Add File Button").click();
          } 
     public async verifyVisibilityOfAttributes(attributeName :string) {
             const attribute = await this.attributeUtil.createAttributeInputLocator(attributeName);
             await Assert.assertVisible(attribute, `Attribute ${attributeName}`);
         }
-    async minimizeWindow() {
+    public async minimizeWindow() {
             await this.uiActions.element(AddDocumentPage.MINIMIZE_BUTTON, "Minimize Button").click();
         }
-    public async selectEntryTemplate(entryTemplate: string) {
-            const entryTemplateAttribute = await this.attributeUtil.createAttributeInputSelector("Entry Template");
-            await this.uiActions.editBox(entryTemplateAttribute, "Entry Template").fill(entryTemplate);
+    public async selectEntryTemplate(documenName: string) {
+           const entryTemplate = this.excel.getEntryTemplateByDocumentType(documenName);
+           if (entryTemplate) {
+            await this.uiActions.editBox(AddDocumentPage.ENTRY_TEMPLATE_INPUT, "Entry template").fill(entryTemplate);
+            await this.uiActions.keyPress("Enter", "Enter Key");
+           }
         }
     public async fillTextBoxAttribute(attribute: string, value: string) {
-            const attributeLocator = await this.attributeUtil.createAttributeInputSelector(attribute);
+            const attributeLocator = await this.attributeUtil.createAttributeInputSelector(attribute as string);
             await this.uiActions.editBox(attributeLocator, attribute).fill(value);
         }
+    public async fillMandatoryAttributes(documentType:string) {
+        const mandatoryAttributes = this.excel.getMandatoryAttributesByDocumentType(documentType);
+        const entryTemplate = this.excel.hasEntryTemplate(documentType);
+        
+        // Check if documentType has an entry template attribute
+        if (entryTemplate) {          
+                await this.selectEntryTemplate(entryTemplate);         
+        }
+        for (const attribute of mandatoryAttributes) {
+            if (attribute.attributeName !== "Entry Template") {
+                const attributeLocator = await this.attributeUtil.createAttributeInputSelector(attribute.attributeName);
+                await this.uiActions.editBox(attributeLocator, attribute.attributeName).fill(attribute.defaultValue);
+            }
+        }
+    }
+
+    public async openAddDocumentPage(documentType:string) {
+        const entryTemplate = this.excel.hasEntryTemplate(documentType); 
+        // Check if documentType has an entry template attribute
+        if (entryTemplate) {          
+                await this.selectEntryTemplate(entryTemplate);         
+        }
+    }
+
+    public async addDocument(documentType: string) {
+        await this.setUploadFilePath();
+        await this.fillMandatoryAttributes(documentType);
+        await this.clickAddButton();
+        await this.clickAddButton();
+    }
 }
