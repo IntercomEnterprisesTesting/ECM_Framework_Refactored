@@ -31,8 +31,8 @@ export default class AttributeUtil {
    * @returns The XPath locator string for the attribute.
    */
   public getAttributeSelector(attributeName: string): string {
-    const attributeLocator = `//a[contains(@title, '${attributeName}')]`;
-    return attributeLocator;
+    const attributeSelector = `//label[text() = '${attributeName}']`;
+    return attributeSelector;
   }
 
   /**
@@ -62,7 +62,7 @@ export default class AttributeUtil {
    * @returns The Locator object for the input element.
    */
   public async createAttributeInputLocator(attributeName: string) {
-    const originalSelector = `//label[contains(text(),'${attributeName}')]`;
+    const originalSelector = this.getAttributeSelector(attributeName);
     const originalLocator = this.createLocatorFromAttributeSelector(originalSelector);
     const forValue = await this.getAttribueFromElement(originalLocator, "for");
     const inputLocator = this.page.locator(`//input[@id="${forValue}"]`);
@@ -75,12 +75,21 @@ export default class AttributeUtil {
    * @returns The XPath selector string for the input element.
    */
   public async createAttributeInputSelector(attributeName: string) {
-    const originalSelector = `//label[contains(text(),'${attributeName}')]`;
+    const originalSelector = this.getAttributeSelector(attributeName);
     const originalLocator = this.createLocatorFromAttributeSelector(originalSelector);
     const forValue = await this.getAttribueFromElement(originalLocator, "for");
     const inputSelector = `//input[@id="${forValue}"]`;
     console.log(`attribute ${attributeName} selector: ${inputSelector}`);
     return inputSelector;
+  }
+
+  private async isAttributeMandatory(attributeName: string): Promise<boolean> {
+    const originalSelector = this.getAttributeSelector(attributeName);
+    const selectorMainDiv = `${originalSelector}/ancestor::div[contains(@class, 'pvrProperty')]`;
+    const originalLocator = this.createLocatorFromAttributeSelector(selectorMainDiv);
+    const classValue = await this.getAttribueFromElement(originalLocator, "class");
+    const isMandatory = classValue?.includes('pvrPropertyRequired') || false;
+    return isMandatory;
   }
 
   /**
@@ -92,7 +101,18 @@ export default class AttributeUtil {
     this.dataMap.forEach((folder) => {
       folder.documents.forEach(async (document) => {
         if (document.documentType === documentType.documentType) {  
-            await this.checkAttributesForDocument(document);
+            await this.checkAttrVisiblityForDoc(document);
+            await this.uiActions.keyPress("Escape", `Exiting document : ${document.documentType}`);
+        }
+      });
+    });
+  }
+
+  public async checkMandatoryAttrForDoc(documentType: DocumentClass): Promise<void> {
+    this.dataMap.forEach((folder) => {
+      folder.documents.forEach(async (document) => {
+        if (document.documentType === documentType.documentType) {  
+            await this.checkAttrMandatoryForDoc(document);
             await this.uiActions.keyPress("Escape", `Exiting document : ${document.documentType}`);
         }
       });
@@ -104,10 +124,10 @@ export default class AttributeUtil {
    * @param document - The DocumentClass object representing the document.
    * @returns A promise that resolves when the check is complete.
    */
-  private async checkAttributesForDocument(document: DocumentClass) {
+  private async checkAttrVisiblityForDoc(document: DocumentClass) {
     const attributes = this.dataBuilder.getAttributeNamesByDocumentClass(document);
     for (const attribute of attributes) {
-      const selector = `//label[text()="${attribute}"]`;
+      const selector = this.getAttributeSelector(attribute);
       try {
         const isVisible = await this.uiActions.element(selector, `attribute: ${attribute}`).isVisible(60);
         if (!isVisible) {
@@ -115,6 +135,20 @@ export default class AttributeUtil {
         }
       } catch (error) {
         TestUtils.addWarning(`Error checking visibility for attribute: ${attribute} under document ${document.documentType}. Error: ${error.message}`);
+      }
+    }
+  }
+
+  private async checkAttrMandatoryForDoc(document: DocumentClass) {
+    const mandatoryAttr = this.dataBuilder.getMandatoryAttributeNamesByDocumentClass(document);
+    for (const attribute of mandatoryAttr) {
+      try {
+        const isAttributeMandatory = await this.isAttributeMandatory(attribute);
+        if (!isAttributeMandatory) {
+          TestUtils.addWarning(`Warning: attribute: ${attribute} under document ${document.documentType} is not mandatory`);
+        }
+      } catch (error) {
+        TestUtils.addWarning(`Error checking mandatory attributes for attribute: ${attribute} under document ${document.documentType}. Error: ${error.message}`);
       }
     }
   }
@@ -132,4 +166,4 @@ export default class AttributeUtil {
       }
       return true;
     }
-}
+  }

@@ -154,7 +154,7 @@ export default class DataBuilder {
   }
 
   // Method to get mandatory attributes for a document type
-  public getMandatoryAttributesByDocumentType(documentType: string): Attribute[] {
+  public getMandatoryAttributes(documentType: string): Attribute[] {
     if (!this.mandatoryAttributesByDocumentType.has(documentType)) {
       const attributes: Attribute[] = [];
       this.foldersMap.forEach((folder) => {
@@ -261,5 +261,12 @@ export default class DataBuilder {
   // Method to get all attribute names for a given document class
   public getAttributeNamesByDocumentClass(documentClass: DocumentClass): string[] {
     return documentClass.attributes.map((attr) => attr.attributeName);
+  }
+
+  // Method to get all mandatory attribute names for a given document class
+  public getMandatoryAttributeNamesByDocumentClass(documentClass: DocumentClass): string[] {
+    return documentClass.attributes
+      .filter((attr) => attr.mandatory)
+      .map((attr) => attr.attributeName);
   }
 }

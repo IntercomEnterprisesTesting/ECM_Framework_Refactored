@@ -50,6 +50,7 @@ export default class FolderNavigationUtil {
   public async navigateToFolder(targetFolderName: string): Promise<void> {
     const rootFolderName = this.getRootFolderName();
     const folderHierarchy = this.buildFolderHierarchy(targetFolderName, rootFolderName);
+    await this.uiActions.waitForDomContentLoaded();
     await this.navigateThroughHierarchy(folderHierarchy, rootFolderName);
   }
 

@@ -59,7 +59,7 @@ export default class AddDocumentPageSteps {
             await this.uiActions.editBox(attributeLocator, attribute).fill(value);
         }
     public async fillMandatoryAttributes(documentType:string) {
-        const mandatoryAttributes = this.excel.getMandatoryAttributesByDocumentType(documentType);
+        const mandatoryAttributes = this.excel.getMandatoryAttributes(documentType);
         const entryTemplate = this.excel.hasEntryTemplate(documentType);
         
         // Check if documentType has an entry template attribute

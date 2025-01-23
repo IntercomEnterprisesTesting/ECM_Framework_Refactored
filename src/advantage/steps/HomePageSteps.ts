@@ -18,6 +18,7 @@ export default class HomePageSteps {
     }
 
     private async waitForHomePageLoad() {
+        await this.uiActions.waitForDomContentLoaded();
         // Wait for a specific element to be visible that indicates the page has fully loaded
         await this.uiActions.element(HomePage.FAVOURITES_BUTTON, "Home Page").isEnabled();
     }
