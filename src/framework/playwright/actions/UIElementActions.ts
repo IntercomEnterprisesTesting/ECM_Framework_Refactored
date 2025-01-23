@@ -272,7 +272,7 @@ export default class UIElementActions {
    * checks if element is disabled
    * @returns Promise<boolean>
    */
-  public async isDisabled(sec: number): Promise<boolean> {
+  public async isDisabled(): Promise<boolean> {
     let status: boolean;
     await test.step(`Checking if ${this.description} is disabled`, async () => {
       const element = this.getLocator();

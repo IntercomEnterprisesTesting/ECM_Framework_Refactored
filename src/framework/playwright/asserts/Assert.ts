@@ -1,5 +1,5 @@
 import {
-     test, expect, Locator, Page,
+     test, expect, Locator, 
     } from '@playwright/test';
 
 export default class Assert {
