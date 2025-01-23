@@ -4,7 +4,7 @@ import UIActions from "@uiActions/UIActions";
 // import CommonConstants from "../constants/CommonConstants";
 import LoginPage from "../pages/LoginPage";
 // eslint-disable-next-line import/order
-import UsersReader from "excelProcessor/usersReader";
+import UsersReader from "Excel/usersReader";
 
 export default class LoginPageSteps {
     private uiActions: UIActions;

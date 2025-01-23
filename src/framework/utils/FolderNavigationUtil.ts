@@ -4,8 +4,8 @@
 import Assert from "@asserts/Assert";
 import { Page } from "@playwright/test";
 import UIActions from "@uiActions/UIActions";
-import DataBuilder from "excelProcessor/DataBuilder";
-import { Folder } from "excelProcessor/types";
+import DataBuilder from "Excel/DataBuilder";
+import { Folder } from "Excel/types";
 
 export default class FolderNavigationUtil {
   private uiActions: UIActions;
@@ -88,7 +88,7 @@ export default class FolderNavigationUtil {
 
   public async assertFolderIsOpened(folder: string): Promise<void> {
     const folderIsOpenedElement = this.page.locator(this.getfolderPathSelector(folder));
-    await Assert.assertElementVisible(folderIsOpenedElement, `${folder} is opened`);
+    await Assert.assertLocatorVisible(folderIsOpenedElement, `${folder} is opened`);
   }
 
   private getFolderSelector(folder: string, rootFolderName: string): string {

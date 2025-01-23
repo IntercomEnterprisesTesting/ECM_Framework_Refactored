@@ -102,7 +102,7 @@ export default class Assert {
     public static async assertVisible(element :any, description: string, softAssert = false) {
         await test.step(`Verifying that ${description} is Visible`, async () => {
             try {
-                const locator : Locator = element.locator();
+                const locator : Locator = element.uiActions.getLocator();
                 await expect(locator).toBeVisible({ timeout: 5000 });
             } catch (error) {
                 if (!softAssert) {
@@ -245,7 +245,7 @@ export default class Assert {
      * @param description - description of the element that is being validated
      * @param softAssert - for soft asserts this has to be set to true, else this can be ignored
      */
-    public static async assertElementVisible(locator: Locator, description: string, softAssert = false) {
+    public static async assertLocatorVisible(locator: Locator, description: string, softAssert = false) {
         await test.step(`Verifying that ${description} is visible`, async () => {
             try {
                 await expect(locator).toBeVisible({ timeout: 5000 });

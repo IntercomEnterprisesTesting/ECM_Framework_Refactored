@@ -7,7 +7,7 @@ import UIActions from "@uiActions/UIActions";
 import TestConstants from "@uiConstants/TestConstants";
 // import CommonConstants from "../constants/CommonConstants";
 import AttributeUtil from "@utils/AttributeUtil";
-import DataBuilder from "excelProcessor/DataBuilder";
+import DataBuilder from "Excel/DataBuilder";
 
 export default class AddDocumentPageSteps {
     private uiActions: UIActions;
@@ -38,7 +38,7 @@ export default class AddDocumentPageSteps {
         // eslint-disable-next-line max-len
         await this.uiActions.element(AddDocumentPage.ADD_FILE_BUTTON, "Confirm Add File Button").click();
          } 
-    public async verifyVisibilityOfAttributes(attributeName :string) {
+    public async verifyVisibilityOfAttribute(attributeName :string) {
             const attribute = await this.attributeUtil.createAttributeInputLocator(attributeName);
             await Assert.assertVisible(attribute, `Attribute ${attributeName}`);
         }
@@ -50,9 +50,11 @@ export default class AddDocumentPageSteps {
            if (entryTemplate) {
             await this.uiActions.editBox(AddDocumentPage.ENTRY_TEMPLATE_INPUT, "Entry template").fill(entryTemplate);
             await this.uiActions.keyPress("Enter", "Enter Key");
+            await this.uiActions.waitForDomContentLoaded();
+            await this.uiActions.element(AddDocumentPage.ATTRIBUTES_DIV, "Attributes div").isVisible(5);
            }
         }
-    public async fillTextBoxAttribute(attribute: string, value: string) {
+    private async fillTextBoxAttribute(attribute: string, value: string) {
             const attributeLocator = await this.attributeUtil.createAttributeInputSelector(attribute as string);
             await this.uiActions.editBox(attributeLocator, attribute).fill(value);
         }
@@ -72,13 +74,13 @@ export default class AddDocumentPageSteps {
         }
     }
 
-    public async openAddDocumentPage(documentType:string) {
-        const entryTemplate = this.excel.hasEntryTemplate(documentType); 
-        // Check if documentType has an entry template attribute
-        if (entryTemplate) {          
-                await this.selectEntryTemplate(entryTemplate);         
-        }
-    }
+    // public async openAddDocumentPage(documentType:string) {
+    //     const entryTemplate = this.excel.hasEntryTemplate(documentType); 
+    //     // Check if documentType has an entry template attribute
+    //     if (entryTemplate) {          
+    //             await this.selectEntryTemplate(entryTemplate);         
+    //     }
+    // }
 
     public async addDocument(documentType: string) {
         await this.setUploadFilePath();

@@ -38,9 +38,14 @@ export default class DataBuilder {
     const attributeSheet = workbook.Sheets['Attributes Sheet'];
     const attributeData = XLSX.utils.sheet_to_json<any>(attributeSheet);
 
+    this.processFolders(folderData);
+    this.processDocumentTypes(documentData);
+    this.processAttributes(attributeData);
+  }
+
+  private processFolders(folderData: any[]): void {
     const folderChildrenMap: Map<string, { [key: string]: Folder }> = new Map();
 
-    // Process folders
     folderData.forEach((row: any) => {
       const folderName = row['Folder name'];
       const parentFolder = row['Parent Folder'];
@@ -69,15 +74,19 @@ export default class DataBuilder {
       }
     });
 
-    // Assign children to parent folders
+    this.assignChildrenToParentFolders(folderChildrenMap);
+  }
+
+  private assignChildrenToParentFolders(folderChildrenMap: Map<string, { [key: string]: Folder }>): void {
     folderChildrenMap.forEach((children, parentName) => {
       const parentFolder = this.foldersMap.get(parentName);
       if (parentFolder) {
         parentFolder.children = children;
       }
     });
+  }
 
-    // Process document types
+  private processDocumentTypes(documentData: any[]): void {
     documentData.forEach((row: any) => {
       const folderName = row['Folder name'];
       const documentType = row['Document type'];
@@ -88,17 +97,18 @@ export default class DataBuilder {
 
       if (folder) {
         const document: DocumentClass = {
-        documentType: documentType,
-        description: '',
-        attributes: [],
-        isDefault: isDefault, // Store default status
-        entryTemplate: entryTemplate, // Store entry template status
+          documentType: documentType,
+          description: '',
+          attributes: [],
+          isDefault: isDefault, // Store default status
+          entryTemplate: entryTemplate, // Store entry template status
         };
         folder.documents.push(document);
       }
     });
+  }
 
-    // Process attributes
+  private processAttributes(attributeData: any[]): void {
     attributeData.forEach((row: any) => {
       const documentType = row['Document type'];
       this.foldersMap.forEach((folder) => {
@@ -176,12 +186,11 @@ export default class DataBuilder {
 
   // Method to extract list attribute values for a specific document type and attribute
   public extractListAttributeValues(
-    foldersMap: Map<string, Folder>,
     documentType: string,
     attributeName: string, // Add attribute name as a parameter
   ): string[] {
     const listValues: string[] = [];
-
+    const foldersMap = this.getFoldersMap(); // Use getFoldersMap to get the folders map
     foldersMap.forEach((folder) => {
       folder.documents.forEach((doc) => {
         if (doc.documentType === documentType) { // Check if document type matches
@@ -193,61 +202,64 @@ export default class DataBuilder {
           });
         }
       });
-    }); 
+    });
+    return listValues; // Return the collected list values for the specified attribute
+  }
 
-    return listValues; // Return the collected list values for the specified attribute 
-  } 
-// Method to get the hierarchy of parent folders for a given folder name
-public getFolderPath(folderName: string): string[] {
+  // Method to get the hierarchy of parent folders for a given folder name
+  public getFolderPath(folderName: string): string[] {
     let currentFolder = this.foldersMap.get(folderName);
 
     while (currentFolder && currentFolder.name !== 'Root folder') {
-        this.folderPath.unshift(currentFolder.name); // Add the current folder name at the beginning
-        currentFolder = this.foldersMap.get(currentFolder.parent);
+      this.folderPath.unshift(currentFolder.name); // Add the current folder name at the beginning
+      currentFolder = this.foldersMap.get(currentFolder.parent);
     }
 
     this.folderPath.push(folderName); // Add the passed folder name at the end
     return this.folderPath;
-}
-// Method to get the root folder name
-public getRootFolderName(): string {
+  }
+
+  // Method to get the root folder name
+  public getRootFolderName(): string {
     const rootFolder = Array.from(this.foldersMap.values()).find((folder) => folder.parent === null);
     return rootFolder ? rootFolder.name : ""; // Return the root folder name or empty if not found
-}
+  }
 
-public getLowLevelFolders(): string[] {
+  public getLowLevelFolders(): string[] {
     return Array.from(this.foldersMap.values())
-        .filter((folder) => folder.parent && folder.parent !== 'Root folder')
-        .map((folder) => folder.name);
-}
+      .filter((folder) => folder.parent && folder.parent !== 'Root folder')
+      .map((folder) => folder.name);
+  }
 
-// Method to get all document types
-public getAllDocumentTypes(): DocumentClass[] {
-  const documentTypes: DocumentClass[] = [];
-  this.foldersMap.forEach((folder) => {
-    folder.documents.forEach((doc) => {
-      documentTypes.push(doc);
+  // Method to get all document types
+  public getAllDocumentTypes(): DocumentClass[] {
+    const documentTypes: DocumentClass[] = [];
+    this.foldersMap.forEach((folder) => {
+      folder.documents.forEach((doc) => {
+        documentTypes.push(doc);
+      });
     });
-  });
-  return documentTypes;
-}
+    return documentTypes;
+  }
 
-// Method to check if a document type has an entry template
-public hasEntryTemplate(documentType: string): string {
-  const document = Array.from(this.foldersMap.values())
-    .flatMap((folder) => folder.documents)
-    .find((doc) => doc.documentType === documentType);
-  return document.entryTemplate; 
+  // Method to check if a document type has an entry template
+  public hasEntryTemplate(documentType: string): string {
+    const document = Array.from(this.foldersMap.values())
+      .flatMap((folder) => folder.documents)
+      .find((doc) => doc.documentType === documentType);
+    return document.entryTemplate; 
+  }
+
+  // Method to get the entry template for a given document type
+  public getEntryTemplateByDocumentType(documentType: string): string {
+    const document = Array.from(this.foldersMap.values())
+      .flatMap((folder) => folder.documents)
+      .find((doc) => doc.documentType === documentType);
+    return document ? document.entryTemplate : ""; // Return the entry template or empty if not found
+  }
+
+  // Method to get all attribute names for a given document class
+  public getAttributeNamesByDocumentClass(documentClass: DocumentClass): string[] {
+    return documentClass.attributes.map((attr) => attr.attributeName);
+  }
 }
-// Method to get the entry template for a given document type
-public getEntryTemplateByDocumentType(documentType: string): string {
-  const document = Array.from(this.foldersMap.values())
-    .flatMap((folder) => folder.documents)
-    .find((doc) => doc.documentType === documentType);
-  return document ? document.entryTemplate : ""; // Return the entry template or empty if not found
-}
-// Method to get all attribute names for a given document class
-public getAttributeNamesByDocumentClass(documentClass: DocumentClass): string[] {
-  return documentClass.attributes.map((attr) => attr.attributeName);
-}
-} 

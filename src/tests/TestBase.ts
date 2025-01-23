@@ -4,10 +4,10 @@ import {
 import LoginPageSteps from '@uiSteps/LoginPageSteps';
 import HomePageSteps from '@uiSteps/HomePageSteps';
 import UIActions from '@uiActions/UIActions';
-import UsersReader from 'excelProcessor/usersReader';
+import UsersReader from 'Excel/usersReader';
 import FolderNavigationUtil from '@utils/FolderNavigationUtil';
-import { Folder, DocumentClass } from 'excelProcessor/types';
-import DataBuilder from 'excelProcessor/DataBuilder';
+import { Folder, DocumentClass } from 'Excel/types';
+import DataBuilder from 'Excel/DataBuilder';
 import AddDocumentPageSteps from '@uiSteps/AddDocumentPageSteps';
 import AttributeUtil from '@utils/AttributeUtil';
 
