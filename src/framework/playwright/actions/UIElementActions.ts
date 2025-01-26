@@ -336,4 +336,15 @@ export default class UIElementActions {
     });
     return this;
   }
+  /**
+   * Clears the input element
+   * @returns
+   */
+  public async clear() {
+    await test.step(`Clearing the input element ${this.description}`, async () => {
+      const element = this.getLocator();
+      await element.fill('');
+    });
+    return this;
+  }
 }

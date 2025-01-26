@@ -4,6 +4,8 @@ import HomePage from "@pages/HomePage";
 import UIActions from "@uiActions/UIActions";
 import FolderNavigationUtil from "@utils/FolderNavigationUtil";
 import LinkUtil from "@utils/LinkUtil";
+import { DocumentClass } from "Excel/types";
+import TestUtils from "@utils/TestUtils";
 import AddDocumentPageSteps from "./AddDocumentPageSteps";
 
 export default class HomePageSteps {
@@ -39,9 +41,13 @@ export default class HomePageSteps {
     }
 
     public async verifyFileAdded(fileName : string) {
-        const fileLinkLocator = LinkUtil.getLinkSelector(fileName);
-        await Assert.assertVisible(fileLinkLocator, `Link for ${fileName}`);
-    } 
+        const fileLinkSelector = LinkUtil.getLinkSelector(fileName);
+        try {
+            await this.uiActions.element(fileLinkSelector, `file: ${fileName}`).waitTillVisible(5);
+        } catch (error) {
+            throw new Error();
+        }
+        }
 
     private async deleteFile(fileName: string) {
         const fileLinkLocator = LinkUtil.getLinkSelector(fileName);
@@ -126,10 +132,10 @@ export default class HomePageSteps {
         await this.uiActions.element(HomePage.ADD_DOCUMENT_WINDOWS_DIV, "Add Document Window").waitTillVisible(5);
     }
     
-    public async addDocumentUsingDocumentType(documentName: string) {
-        await this.folderNavigation.navigateToDocumentFolder(documentName);
+    public async openAddDoc(documentClass: DocumentClass) {
+        await this.folderNavigation.navigateToDocumentFolder(documentClass.documentType);
         await this.clickAddDocumentButton();
-        await this.addDocumentSteps.selectEntryTemplate(documentName);
+        await this.addDocumentSteps.selectEntryTemplate(documentClass.documentType);
     }
     
     public async navigateToDocumentFolder(folderName: string) {

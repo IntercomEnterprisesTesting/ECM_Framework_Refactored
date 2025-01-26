@@ -259,8 +259,8 @@ export default class DataBuilder {
   }
 
   // Method to get all attribute names for a given document class
-  public getAttributeNamesByDocumentClass(documentClass: DocumentClass): string[] {
-    return documentClass.attributes.map((attr) => attr.attributeName);
+  public getAttributeNamesByDocumentClass(documentClass: DocumentClass): Attribute[] {
+    return documentClass.attributes;
   }
 
   // Method to get all mandatory attribute names for a given document class
@@ -268,5 +268,17 @@ export default class DataBuilder {
     return documentClass.attributes
       .filter((attr) => attr.mandatory)
       .map((attr) => attr.attributeName);
+  }
+
+  // Method to get all non-mandatory attribute names for a given document class
+  public getNonMandatoryAttributeNamesByDocumentClass(documentClass: DocumentClass): Attribute[] {
+    return documentClass.attributes.filter((attr) => !attr.mandatory);
+  }
+  // Method to get attribute names with max length value for a given document class
+  public getAttributesWithMaxLength(documentClass: DocumentClass): Attribute[] {
+    return documentClass.attributes.filter((attr) => attr.maxLength !== undefined);
+  }
+  public getListAttributes(documentClass: DocumentClass): Attribute[] {
+    return documentClass.attributes.filter((attr) => attr.attributeType === "List");
   }
 }

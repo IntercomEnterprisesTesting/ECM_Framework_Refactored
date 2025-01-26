@@ -114,4 +114,12 @@ export default class StringUtil {
   public static formatStringFromObject(str: string, obj: any): string {
     return format(str, obj);
   }
-}
+    /**
+   * Generates a string of format 'TestDocument {random number of 6 digits}'
+   * @returns
+   */
+    public static generateTestDocumentName(): string {
+      const randomNumber = this.randomNumberString(6); 
+      return `TestDocument ${randomNumber}`;
+    }
+  }

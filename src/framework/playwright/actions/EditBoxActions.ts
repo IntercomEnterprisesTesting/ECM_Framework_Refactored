@@ -72,4 +72,14 @@ export default class EditBoxActions extends UIElementActions {
     });
     return this;
   }
+  /**
+   * Clears the text field
+   * @returns
+   */
+  public async clear() {
+    await test.step(`Clearing ${this.description}`, async () => {
+      await this.getLocator().fill('');
+    });
+    return this;
+  }
 }

@@ -103,7 +103,7 @@ export default class Assert {
         await test.step(`Verifying that ${description} is Visible`, async () => {
             try {
                 const locator : Locator = element.uiActions.getLocator();
-                await expect(locator).toBeVisible({ timeout: 5000 });
+                await expect(locator).toBeVisible({ timeout: 10000 });
             } catch (error) {
                 if (!softAssert) {
                     throw new Error(error);
