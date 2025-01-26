@@ -132,6 +132,6 @@ export default class StringUtil {
       if (array1.length !== array2.length) {
         return false; // Arrays of different lengths cannot be equal
       }
-      return array1.every((item, index) => item.toLowerCase() === array2[index].toLowerCase());
+      return array1 === array2;
     }
   }
