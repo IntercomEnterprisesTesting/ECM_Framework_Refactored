@@ -4,6 +4,7 @@ import UIActions from "@uiActions/UIActions";
 import DataBuilder from "Excel/DataBuilder";
 import { Folder, DocumentClass, Attribute } from "Excel/types";
 import TestUtils from "./TestUtils";
+import StringUtil from "./StringUtil";
 
 /**
  * Utility class for handling attributes within a page.
@@ -256,14 +257,15 @@ private async getListArrowSelector(id: string): Promise<string> {
   const listItemSelector = `//div[@widgetid="${id}"]//input[contains(@class,"dijitArrowButtonInner")]`;
   return listItemSelector;
 }
-private async getListLocatorsByID(id:string) {
-  const locatorTexts = this.page.locator(`//div[contains(@id, "${id}_popup") and @role ="option"]`); 
- console.log(`locator text ${locatorTexts}`);
+private async getListLocatorsByID(id:string): Promise<string[]> {
+  const selector = `//div[contains(@id, "${id}_popup") and @role ="option"]`;
+  await this.uiActions.element(selector, "list item").waitForPresent();
+  const locatorTexts = await this.page.locator(selector).allTextContents();
   return locatorTexts; 
 }
 
 public async extractActualListItemsForAttribute(attributeName: string): Promise<string[]> {
-  const allTexts: string[] = []; // Array to collect texts from the list items
+  let allTexts: string[] = []; // Array to collect texts from the list items
 
   try {
     // Create the locator based on the attribute label (XPath example)
@@ -277,28 +279,14 @@ public async extractActualListItemsForAttribute(attributeName: string): Promise<
       console.log(error);
     }
       // Get the list locators and count how many elements are present
-    const baseID = await this.getListLocatorsByID(id);
-    const count = await baseID.count();
-    console.log(`count = ${count}`);
-
+      const innerText = await this.getListLocatorsByID(id);
+     allTexts = StringUtil.filterArray(innerText);
       // Loop over each list item and collect the text content
-      for (let i = 0; i < count; i++) {
-        const listContent = await baseID.nth(i).textContent();
-        const safeListContent = listContent !== null ? listContent.trim() : '';
-        if (safeListContent) {
-          allTexts.push(safeListContent); // Add to array if not empty
-        }
-      }
-     // await this.uiActions.keyPress("Escape", "dismiss list");
-  } catch (error) {
-    console.error(`Error processing list attribute "${attributeName}": ${error.message}`);
-  }
-
-  // Ignore the first and last elements if there are more than 2 items
-  if (allTexts.length > 2) {
-    return allTexts.slice(1, allTexts.length - 1); // Remove the first and last items
-  }
-  console.log(`all text for attribut${attributeName} is ${allTexts}`);
-  return allTexts; // Return the list items as is if there are 2 or fewer items
+  // Ignore the first and last elements if there are more than 2 items 
+} catch (error) {
+  console.error(`Error extracting list items for attribute "${attributeName}": ${error.message}`);
+}
+await this.uiActions.keyPress("Escape", "Dismiss list"); // Return the list items as is if there are 2 or fewer items
+return allTexts;
 }
 }

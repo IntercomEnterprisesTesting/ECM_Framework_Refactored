@@ -122,4 +122,16 @@ export default class StringUtil {
       const randomNumber = this.randomNumberString(6); 
       return `TestDocument ${randomNumber}`;
     }
+
+    public static filterArray(arr: string[]): string[] {
+      const unwantedStrings = ["Previous choices", "More choices"]; // Strings to remove
+      return arr.filter((item) => !unwantedStrings.includes(item));
+    }
+
+    public static validateListItems(array1: string[], array2: string[]): boolean {
+      if (array1.length !== array2.length) {
+        return false; // Arrays of different lengths cannot be equal
+      }
+      return array1.every((item, index) => item.toLowerCase() === array2[index].toLowerCase());
+    }
   }
