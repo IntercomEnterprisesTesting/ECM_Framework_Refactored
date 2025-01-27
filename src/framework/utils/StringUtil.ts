@@ -1,5 +1,7 @@
+/* eslint-disable no-restricted-syntax */
 import randomString from "randomstring";
 import format from "string-format";
+import TestUtils from "./TestUtils";
 
 export default class StringUtil {
   /**
@@ -128,10 +130,37 @@ export default class StringUtil {
       return arr.filter((item) => !unwantedStrings.includes(item));
     }
 
-    public static validateListItems(array1: string[], array2: string[]): boolean {
-      if (array1.length !== array2.length) {
-        return false; // Arrays of different lengths cannot be equal
+    public static validateListItems(expectedList: string[], actualList: string[]) : boolean {
+      const missingItems: string[] = [];
+      const extraItems: string[] = [];
+      if (actualList.length === 0 || expectedList.length === 0) {
+        TestUtils.addWarning(`List validation failed for document type . Either actual or expected list is empty.`);
       }
-      return array1 === array2;
+      for (const expectedItem of expectedList) {
+        if (!expectedList.includes(expectedItem)) {
+          missingItems.push(expectedItem); // If expected item is missing from the actual list
+        }
+      }
+      // Optionally, check if there are extra items in actualListItems that are not expected
+      for (const actualItem of actualList) {
+        if (!actualList.includes(actualItem)) {
+          extraItems.push(actualItem); // If actual item is not in the expected list
+        }
+      }
+    
+      // Print out the missing and extra elements, if any
+      if (missingItems.length > 0 || extraItems.length > 0) {
+        TestUtils.addWarning(`Document type Mismatch found in list items.`);
+        
+        if (missingItems.length > 0) {
+          TestUtils.addWarning(`Missing items from list: ${missingItems}`);
+          return false;
+        }
+        if (extraItems.length > 0) {
+          TestUtils.addWarning(`Unexpected extra items in list: , ${extraItems}`);
+          return false;
+        }
+      }
+      return true;
     }
   }
