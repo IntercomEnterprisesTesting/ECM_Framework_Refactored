@@ -3,7 +3,6 @@
 /allure-report
 /node_modules
 node_modules
-**/*.test.ts
 /.vscode
 src/resources/data/~$Project.xlsx
 src/resources/data/~$users.xlsx
