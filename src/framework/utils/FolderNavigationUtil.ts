@@ -25,11 +25,6 @@ export default class FolderNavigationUtil {
     return folderPath;
 }
 
-  private getFolderPathSelector(folderName: string) {
-    const folderPath = `//span[@class="dijitInline breadcrumbItem"]/div[text()="${folderName}"]`; // Locator for the folder path
-    return folderPath;
-  }
-
   private getFolderMenuArrowSelector(folderName: string): string {
     const folderMenuSelector = `//div[contains(@id, 'ecm_widget_Tree_0')]//span[contains(text(), '${folderName}')]`;
     const folderMainDivSelector = `${folderMenuSelector}/ancestor::div[contains(@class, 'dijitTreeRow')]`;
@@ -80,6 +75,7 @@ export default class FolderNavigationUtil {
       try {
         const selector = this.getFolderSelector(folder, rootFolderName);
         await this.uiActions.element(selector, `${folder}`).click();
+        await this.assertFolderIsOpened(folder);
       } catch (error) {
         console.error(`Warning: Error navigating to folder "${folder}": ${error.message}`);
         // eslint-disable-next-line no-continue

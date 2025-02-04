@@ -130,37 +130,36 @@ export default class StringUtil {
       return arr.filter((item) => !unwantedStrings.includes(item));
     }
 
-    public static validateListItems(expectedList: string[], actualList: string[]) : boolean {
-      const missingItems: string[] = [];
-      const extraItems: string[] = [];
-      if (actualList.length === 0 || expectedList.length === 0) {
-        TestUtils.addWarning(`List validation failed for document type . Either actual or expected list is empty.`);
-      }
-      for (const expectedItem of expectedList) {
-        if (!expectedList.includes(expectedItem)) {
-          missingItems.push(expectedItem); // If expected item is missing from the actual list
-        }
-      }
-      // Optionally, check if there are extra items in actualListItems that are not expected
-      for (const actualItem of actualList) {
-        if (!actualList.includes(actualItem)) {
-          extraItems.push(actualItem); // If actual item is not in the expected list
-        }
-      }
-    
-      // Print out the missing and extra elements, if any
-      if (missingItems.length > 0 || extraItems.length > 0) {
-        TestUtils.addWarning(`Document type Mismatch found in list items.`);
-        
-        if (missingItems.length > 0) {
-          TestUtils.addWarning(`Missing items from list: ${missingItems}`);
+    public static validateListItems(expectedList: string[], actualList: string[]): boolean {
+      // Normalize the arrays by converting non-breaking spaces to regular spaces
+      const normalizeSpaces = (arr: string[]): string[] => {
+          return arr.map(item => item.replace(/ /g, ' ')); // Replace non-breaking space with regular space
+      };
+  
+      // Normalize both expected and actual lists
+      const normalizedExpectedList = normalizeSpaces(expectedList);
+      const normalizedActualList = normalizeSpaces(actualList);
+  
+      if (normalizedExpectedList.length === 0 || normalizedActualList.length === 0) {
+          TestUtils.addWarning(`List validation failed: either actual or expected list is empty.`);
           return false;
-        }
-        if (extraItems.length > 0) {
-          TestUtils.addWarning(`Unexpected extra items in list: , ${extraItems}`);
-          return false;
-        }
       }
+  
+      const missingItems = normalizedExpectedList.filter(expectedItem => 
+          !normalizedActualList.some(actualItem => expectedItem === actualItem)
+      );
+  
+      const extraItems = normalizedActualList.filter(actualItem => 
+          !normalizedExpectedList.some(expectedItem => expectedItem === actualItem)
+      );
+  
+      if (missingItems.length || extraItems.length) {
+          if (missingItems.length) TestUtils.addWarning(`Missing items: ${missingItems.join(", ")}`);
+          if (extraItems.length) TestUtils.addWarning(`Extra items: ${extraItems.join(", ")}`);
+          return false; 
+      }
+  
       return true;
-    }
+  }
+  
   }

@@ -128,7 +128,7 @@ export default class UIElementActions {
    */
   public async waitForPresent() {
     await test.step(`Wait for ${this.description} to attach to DOM`, async () => {
-        await this.getLocator().waitFor({ state: "attached" });
+        await this.getLocator().waitFor({ state: "attached", timeout: 3000 });
       });
     return this;
   }

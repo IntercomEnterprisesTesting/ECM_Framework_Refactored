@@ -19,7 +19,7 @@ const testClass = new DocumentTests();
 test.describe('[Document Specs tests]', () => {
     test.beforeAll(async () => {
         await testClass.login.launchApplication();
-        await testClass.login.performLogin(1);
+        await testClass.login.performLogin(0);
         await testClass.homeSteps.navigateToBrowse();
     });
 
@@ -34,6 +34,7 @@ test('Verify all documents have the correct attributes', async () => {
                 await test.step(`checking attributes for document: ${document.documentType}`, async () => {
                     await testClass.homeSteps.openAddDoc(document);
                     await testClass.attributeUtil.checkAttributesForDocumentType(document);
+                    await testClass.uiActions.keyPress("Escape", `Exiting document : ${document.documentType}`);
                 });
             } catch (error) {
                 TestUtils.addWarning(`Warning: Verify all documents have the correct attributes for document ${document.documentType} failed - ${error.message}`);
@@ -107,7 +108,32 @@ test('Verify user can add document with only mandatory fields', async () => {
     TestUtils.checkWarnings();
 });
 
-test('test list', async () => {
+test('Verify list items have the correct values for all List attributes', async () => {
+    const documents: DocumentClass[] = testClass.excel.getAllDocumentTypes();
+    for (const document of documents) {
+        const attributes = testClass.excel.getListAttributes(document);
+        for (const attribute of attributes) {
+            try {
+                await test.step(`trying to add document: ${document.documentType} without mandatory fields`, async () => {
+                    const expectedItems = testClass.excel.extractListAttributeValues(document.documentType, attribute.attributeName);
+                    await testClass.homeSteps.openAddDoc(document);
+                    const actualItems = await testClass.attributeUtil.extractActualListItemsForAttribute(attribute.attributeName);
+                    const isValid = StringUtil.validateListItems(expectedItems, actualItems);
+                    if (!isValid) {
+                        TestUtils.addWarning(`Warning: ${document.documentType} list items are not identical`);
+                    }
+                    await testClass.uiActions.keyPress("Escape", "Exit docuement Screen");
+                });
+            } catch (error) {
+                TestUtils.addWarning(`Warning: ${document.documentType} could not be found - ${error.message}`);
+            }
+        }   
+    }
+
+    TestUtils.checkWarnings();
+});
+
+test('Verify that user cannot add document with future date', async () => {
     const documents: DocumentClass[] = testClass.excel.getAllDocumentTypes();
     for (const document of documents) {
         const attributes = testClass.excel.getListAttributes(document);

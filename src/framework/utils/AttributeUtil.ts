@@ -168,7 +168,6 @@ export default class AttributeUtil {
       folder.documents.forEach(async (document) => {
         if (document.documentType === documentType.documentType) {  
             await this.checkAttrVisiblityForDoc(document);
-            await this.uiActions.keyPress("Escape", `Exiting document : ${document.documentType}`);
         }
       });
     });
@@ -201,7 +200,7 @@ export default class AttributeUtil {
         await this.uiActions.element(maxLength, `Max length locator for attribute ${attribute.attributeName}`).waitForPresent();
       } catch (error) {
         // Log an error if the locator is not attached
-        TestUtils.addWarning(`Max length verification failed for attribute "${attribute.attributeName}": ${error.message}`);
+        TestUtils.addWarning(`Max length verification failed for attribute "${attribute.attributeName}" under document "${document.documentType}: ${error.message}`);
         allAttributesValid = false; // Mark as invalid if the locator is not attached
       }
     }

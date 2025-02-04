@@ -16,7 +16,7 @@ const testClass = new FolderTests();
 test.describe('[Folder Specs tests]', () => {
     test.beforeAll(async () => {
         await testClass.login.launchApplication();
-        await testClass.login.performLogin(1);
+        await testClass.login.performLogin(0);
         await testClass.homeSteps.navigateToBrowse();
     });
 
