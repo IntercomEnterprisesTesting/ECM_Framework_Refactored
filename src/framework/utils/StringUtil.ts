@@ -1,3 +1,5 @@
+/* eslint-disable no-irregular-whitespace */
+/* eslint-disable max-len */
 /* eslint-disable no-restricted-syntax */
 import randomString from "randomstring";
 import format from "string-format";
@@ -132,9 +134,7 @@ export default class StringUtil {
 
     public static validateListItems(expectedList: string[], actualList: string[]): boolean {
       // Normalize the arrays by converting non-breaking spaces to regular spaces
-      const normalizeSpaces = (arr: string[]): string[] => {
-          return arr.map(item => item.replace(/ /g, ' ')); // Replace non-breaking space with regular space
-      };
+      const normalizeSpaces = (arr: string[]): string[] => arr.map((item) => item.replace(/ /g, ' ')); // Replace non-breaking space with regular space
   
       // Normalize both expected and actual lists
       const normalizedExpectedList = normalizeSpaces(expectedList);
@@ -145,15 +145,12 @@ export default class StringUtil {
           return false;
       }
   
-      const missingItems = normalizedExpectedList.filter(expectedItem => 
-          !normalizedActualList.some(actualItem => expectedItem === actualItem)
-      );
+      const missingItems = normalizedExpectedList.filter((expectedItem) => !normalizedActualList.some((actualItem) => expectedItem === actualItem));
   
-      const extraItems = normalizedActualList.filter(actualItem => 
-          !normalizedExpectedList.some(expectedItem => expectedItem === actualItem)
-      );
+      const extraItems = normalizedActualList.filter((actualItem) => !normalizedExpectedList.some((expectedItem) => expectedItem === actualItem));
   
       if (missingItems.length || extraItems.length) {
+          TestUtils.addWarning(`Document type mismatch found in list items.`);
           if (missingItems.length) TestUtils.addWarning(`Missing items: ${missingItems.join(", ")}`);
           if (extraItems.length) TestUtils.addWarning(`Extra items: ${extraItems.join(", ")}`);
           return false; 
@@ -161,5 +158,4 @@ export default class StringUtil {
   
       return true;
   }
-  
   }
