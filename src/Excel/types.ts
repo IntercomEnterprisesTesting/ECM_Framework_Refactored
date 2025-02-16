@@ -9,7 +9,7 @@ export interface Folder {
 
 export interface DocumentClass {
   documentType: string;
-  description: string;
+  folderName: string;
   attributes: Attribute[];
   isDefault: boolean; // Property to store the 'Default' column value
   entryTemplate: string; // New property to store the 'Entry template' column value

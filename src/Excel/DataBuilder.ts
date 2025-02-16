@@ -98,7 +98,7 @@ export default class DataBuilder {
       if (folder) {
         const document: DocumentClass = {
           documentType: documentType,
-          description: '',
+          folderName: folderName,
           attributes: [],
           isDefault: isDefault, // Store default status
           entryTemplate: entryTemplate, // Store entry template status
@@ -259,15 +259,18 @@ export default class DataBuilder {
   }
 
   // Method to get all attribute names for a given document class
-  public getAttributeNamesByDocumentClass(documentClass: DocumentClass): Attribute[] {
+  public getAttributeByDocumentClass(documentClass: DocumentClass): Attribute[] {
     return documentClass.attributes;
   }
 
+  public getAttributeNameByDocumentClass(documentClass: DocumentClass): string[] {
+    const attr = this.getAttributeByDocumentClass(documentClass);
+    return attr.map((a) => a.attributeName);
+  }
+
   // Method to get all mandatory attribute names for a given document class
-  public getMandatoryAttributeNamesByDocumentClass(documentClass: DocumentClass): string[] {
-    return documentClass.attributes
-      .filter((attr) => attr.mandatory)
-      .map((attr) => attr.attributeName);
+  public getMandatoryAttributeNamesByDocumentClass(documentClass: DocumentClass): Attribute[] {
+    return documentClass.attributes.filter((attr) => attr.mandatory);
   }
 
   // Method to get all non-mandatory attribute names for a given document class
@@ -280,5 +283,12 @@ export default class DataBuilder {
   }
   public getListAttributes(documentClass: DocumentClass): Attribute[] {
     return documentClass.attributes.filter((attr) => attr.attributeType === "List");
+  }
+
+  // Method to return all folder names that can add documents
+  public getFolderNamesToAddDocument(): string[] {
+    return Array.from(this.foldersMap.values())
+      .filter((folder) => folder.canAdd)
+      .map((folder) => folder.name);
   }
 }
