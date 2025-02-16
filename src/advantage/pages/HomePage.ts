@@ -2,6 +2,7 @@ import TestConstants from "@uiConstants/TestConstants";
 
 /* eslint-disable max-len */
 export default class HomePage {    
+    static readonly FEATURES_MENU = '//div[@aria-label="Features menu"]';
     static readonly FAVOURITES_BUTTON = '//div[@role="tree" and @aria-label="Favorites Tree"]';
     static readonly OPENED_SIDE_MENU = '//nav[@class="featureListPane"]';
     static readonly SIDE_MENU_BUTTON = '//div[@data-dojo-attach-point="featureList" and @class="bannerFeatureList"]';
@@ -21,9 +22,11 @@ export default class HomePage {
     static readonly SEARCH_BUTTON = `//tr[@role="menuitem" and @aria-label="Search "]`;
     static readonly SEARCH_TEXTBOX = `//input[@title="Search name contains"]`;
     static readonly DELETE_BUTTON = '//table[contains(@class,"dijitMenuActive")]//td[text()="Delete"]';
-    static readonly CONFIRM_DELETE_BUTTON = `[@role="button" and text()="Delete"]`;
+    static readonly CONFIRM_DELETE_BUTTON = `//span[contains(@id,"ecm_widget_Button") and text()="Delete"]`;
     static readonly PROFILE_MENU_BUTTON = '//span[contains(@title,"User session for")]';
     static readonly LOGOUT_BUTTON = '//td[contains(text(),"Log Out")]';
     static readonly PROPERTIES_MENU_BUTTON = '//table[contains(@class,"dijitMenuActive")]//td[text()="Properties"]';
     static readonly TEST_FILE_SELECTOR = `//a[@class="anchorLink" and text() ='${TestConstants.TEST_FILE_NAME}']`;
+    static readonly TOTAL_COUNT = `//span[@class="totalCount"]`;
+    static readonly SIDE_MENU_LOADED = `//div[contains(@class,"dijitTreeNodeLoaded")]`;
 }

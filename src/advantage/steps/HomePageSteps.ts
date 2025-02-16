@@ -5,7 +5,6 @@ import UIActions from "@uiActions/UIActions";
 import FolderNavigationUtil from "@utils/FolderNavigationUtil";
 import LinkUtil from "@utils/LinkUtil";
 import { DocumentClass } from "Excel/types";
-import TestUtils from "@utils/TestUtils";
 import AddDocumentPageSteps from "./AddDocumentPageSteps";
 
 export default class HomePageSteps {
@@ -26,10 +25,13 @@ export default class HomePageSteps {
     }
 
     private async clickSideMenuButton() {
+        await this.uiActions.element(HomePage.FEATURES_MENU, "Features Menu Button").waitTillVisible(5);
         await this.uiActions.element(HomePage.SIDE_MENU_BUTTON, "Side Menu Button").click();
     }
     private async clickBrowseButton() {
+        await this.uiActions.waitForDomContentLoaded();
         await this.uiActions.element(HomePage.BROWSE_BUTTON, "Browse Button").click();
+        await this.uiActions.element(HomePage.TOTAL_COUNT, "Total count dev").waitTillVisible(5);
     }
 
     private async clickSearchButton() {
@@ -49,12 +51,18 @@ export default class HomePageSteps {
         }
         }
 
-    private async deleteFile(fileName: string) {
-        const fileLinkLocator = LinkUtil.getLinkSelector(fileName);
-        await this.uiActions.element(fileLinkLocator, `Link for ${fileName}`).rightClick();
+    public async openActionMenu(fileName: string) {
+            const fileLinkLocator = LinkUtil.getLinkSelector(fileName);
+            await this.uiActions.element(fileLinkLocator, `Link for ${fileName}`).rightClick();
+            return fileLinkLocator;
+        } 
+
+    public async deleteFile(fileName: string) {
+        const fileLinkLocator = await this.openActionMenu(fileName);
         await this.uiActions.element(HomePage.DELETE_BUTTON, "Actions Menu Button").click();
         await this.uiActions.element(HomePage.CONFIRM_DELETE_BUTTON, "Confirm Delete Button").click();
-        await Assert.assertNull(fileLinkLocator, `Link for ${fileName}`);
+        const count = await this.uiActions.element(fileLinkLocator, "File").getCount();
+        Assert.assertEquals(0, count, "Add document page ");
     } 
 
     public async deleteUploadedFiles() {
@@ -96,14 +104,18 @@ export default class HomePageSteps {
     public async navigateToBrowse() {
         await this.waitForHomePageLoad();
         await this.clickSideMenuButton();
+        await this.uiActions.element(HomePage.SIDE_MENU_LOADED, "Browse Button").waitTillVisible(5);
+        await this.uiActions.waitForDomContentLoaded();
         const menuIsOpened = await this.uiActions.element(HomePage.OPENED_SIDE_MENU, "Opened side menu").isVisible(5);
         if (!menuIsOpened) {
             await this.clickSideMenuButton();
         }
         await this.verifyMenuIsOpened();
+        await this.uiActions.waitForDomContentLoaded();
         // Wait for the side menu button to be visible
         // Click the side menu button
         await this.clickBrowseButton();
+        await this.uiActions.waitForDomContentLoaded();
         // Click the browse button
     }
 
@@ -112,14 +124,17 @@ export default class HomePageSteps {
         await this.waitForHomePageLoad();
     // Click the side menu button
         await this.clickSideMenuButton();
+        await this.uiActions.waitForDomContentLoaded();
         const menuIsOpened = await this.uiActions.element(HomePage.OPENED_SIDE_MENU, "Opened side menu").isVisible(2);
         if (!menuIsOpened) {
             await this.clickSideMenuButton();
         }
     // verify menu is opened
         await this.verifyMenuIsOpened();
+        await this.uiActions.waitForDomContentLoaded();
     // Click the search button
         await this.clickSearchButton();
+        await this.uiActions.waitForDomContentLoaded();
     // verify search Feild is displayed
         await this.uiActions.element(HomePage.SEARCH_TEXTBOX, "Search Field").waitTillVisible(5);
     // return new searchPage (this.page);
