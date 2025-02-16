@@ -123,8 +123,12 @@ export default class StringUtil {
    * @returns
    */
     public static generateTestDocumentName(): string {
-      const randomNumber = this.randomNumberString(6); 
-      return `TestDocument ${randomNumber}`;
+      const timestamp = new Date()
+      .toISOString()
+      .replace(/[-:]/g, '')
+      .replace(/[T.]/g, '_')
+      .slice(0, 14); // Format: YYYYMMDD_HHMMSS
+      return `TestDocument ${timestamp}`;
     }
 
     public static filterArray(arr: string[]): string[] {
