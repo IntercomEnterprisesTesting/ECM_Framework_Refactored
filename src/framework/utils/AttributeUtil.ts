@@ -52,7 +52,7 @@ export default class AttributeUtil {
    * @returns A promise that resolves when the check is complete.
    */
   private async checkAttrVisiblityForDoc(document: DocumentClass) {
-    const attributes = this.dataBuilder.getAttributeNamesByDocumentClass(document);
+    const attributes = this.dataBuilder.getAttributeByDocumentClass(document);
     for (const attribute of attributes) {
       const selector = this.getAttributeSelector(attribute.attributeName);
       try {
@@ -70,9 +70,9 @@ export default class AttributeUtil {
     const mandatoryAttr = this.dataBuilder.getMandatoryAttributeNamesByDocumentClass(document);
     for (const attribute of mandatoryAttr) {
       try {
-        const isAttributeMandatory = await this.isAttributeMandatory(attribute);
+        const isAttributeMandatory = await this.isAttributeMandatory(attribute.attributeName);
         if (!isAttributeMandatory) {
-          TestUtils.addWarning(`Warning: attribute: ${attribute} under document ${document.documentType} is not mandatory`);
+          TestUtils.addWarning(`Warning: attribute: ${attribute.attributeName} under document ${document.documentType} is not mandatory while it should be`);
         }
       } catch (error) {
         TestUtils.addWarning(`Error checking mandatory attributes for attribute: ${attribute} under document ${document.documentType}. Error: ${error.message}`);
@@ -86,7 +86,7 @@ export default class AttributeUtil {
       try {
         const isAttributeMandatory = await this.isAttributeMandatory(attribute.attributeName);
         if (isAttributeMandatory) {
-          TestUtils.addWarning(`Warning: attribute: ${attribute} under document ${document.documentType} is mandatory`);
+          TestUtils.addWarning(`Warning: attribute: ${attribute.attributeName} under document ${document.documentType} is mandatory while it should not be`);
         }
       } catch (error) {
         TestUtils.addWarning(`Error checking mandatory attributes for attribute: ${attribute} under document ${document.documentType}. Error: ${error.message}`);
@@ -179,7 +179,6 @@ export default class AttributeUtil {
         if (document.documentType === documentType.documentType) {  
             await this.checkAttrMandatoryForDoc(document);
             await this.checkNonMandatoryAttributes(document);
-            await this.uiActions.keyPress("Escape", `Exiting document : ${document.documentType}`);
         }
       });
     });
@@ -200,7 +199,7 @@ export default class AttributeUtil {
         await this.uiActions.element(maxLength, `Max length locator for attribute ${attribute.attributeName}`).waitForPresent();
       } catch (error) {
         // Log an error if the locator is not attached
-        TestUtils.addWarning(`Max length verification failed for attribute "${attribute.attributeName}" under document "${document.documentType}: ${error.message}`);
+        TestUtils.addWarning(`Max length verification failed for attribute "${attribute.attributeName}" under document "${document.documentType} with expected max length to be ${attribute.maxLength} : ${error.message}`);
         allAttributesValid = false; // Mark as invalid if the locator is not attached
       }
     }
@@ -235,7 +234,7 @@ export default class AttributeUtil {
 ): Promise<void> {
   try {
       // Get the list of attributes for the specified document type
-      const attributes = this.dataBuilder.getAttributeNamesByDocumentClass(documentType);
+      const attributes = this.dataBuilder.getAttributeByDocumentClass(documentType);
       
       // Iterate over the attributes and clear their values
       for (const attribute of attributes) {
@@ -287,5 +286,25 @@ public async extractActualListItemsForAttribute(attributeName: string): Promise<
 }
 await this.uiActions.keyPress("Escape", "Dismiss list"); // Return the list items as is if there are 2 or fewer items
 return allTexts;
+}
+
+public async getAllActualAttrs(): Promise<string[]> {
+  const labels: string[] = [];
+  const locator = this.page.locator('//label[contains(@id, "pvr_widget_Property_") and @id]');
+  
+  try {
+      const count = await locator.count();
+      for (let i = 0; i < count; i++) {
+          const text = await locator.nth(i).textContent();
+          if (text) {
+              labels.push(text.trim());
+          }
+      }
+  } catch (error) {
+      console.error(`Error extracting property labels: ${error.message}`);
+  }
+  console.log(`all attributes = ${labels}`);
+
+  return labels;
 }
 }

@@ -4,9 +4,9 @@ export default class AddDocumentPage {
     static readonly FILE_INPUT = 'input[type="file"]';
     static readonly ADD_FILE_BUTTON = '//span[@role="button" and contains(@id,"ADD_dijit_form_Button")]';
     static readonly MINIMIZE_BUTTON = 'span[role="button"][title="Restore"]';
-    static readonly MANDATORY_FIELD_ERROR_MESSAGE_LOCATOR = "This value is required.";
+    static readonly MANDATORY_FIELD_ERROR_MESSAGE = "This value is required.";
     static readonly LIST_LOCATOR = '//input[@alt="النوع"]';
-    static readonly MANDATORY_FIELD_ERROR_TEXT = `//div[@role="presentation" and text() = ${this.MANDATORY_FIELD_ERROR_MESSAGE_LOCATOR}]`;
+    static readonly MANDATORY_FIELD_ERROR_MESSAGE_LOCATOR = `//div[@role="presentation" and text() = ${this.MANDATORY_FIELD_ERROR_MESSAGE}]`;
     static readonly ENTRY_TEMPLATE_INPUT = '//input[contains(@id,"entryTemplateSelector")]';
     static readonly CANCEL_BUTTON = '//span[@role="button" and contains(@id,"CANCEL_ecm_widget_dialog_AddContentItemDialog")]';
     static readonly ATTRIBUTES_DIV = '//div[@class="documentClassDiv"]';

@@ -69,27 +69,26 @@ test.describe('[Security matrix]', () => {
     await testClass.login.performLogin(2);
     await testClass.homeSteps.navigateToBrowse();
     await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
-    await testClass.homeSteps.openActionMenu(fileName);
     await testClass.homeSteps.clickPropertiesButton(fileName);
     await testClass.properties.updateDocumentStatus("Approved");
-    await testClass.properties.saveDocument();
     await testClass.homeSteps.logOut();
     await testClass.login.performLogin(1);
     await testClass.homeSteps.navigateToBrowse();
     await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
-    await testClass.homeSteps.openActionMenu(fileName);
     await testClass.homeSteps.clickPropertiesButton(fileName);
+    await testClass.attributeUtil.checkAttributesForDocumentType(document);
+    await testClass.properties.clickCancelButton();
         } catch (error) {
-    TestUtils.addWarning(`Warning: Failed to delete docuemnt ${document.documentType} - ${error.message}`);
+    TestUtils.addWarning(`Bug: Failed to view docuemnt ${document.documentType} attributes - ${error.message}`);
 } 
      await testClass.homeSteps.logOut();
      TestUtils.checkWarnings();
 });
 
-  test.afterAll(async () => {
-    await testClass.login.performLogin(0);
-    await testClass.homeSteps.navigateToBrowse();
-    await testClass.clearFolders();
-    await testClass.context.close();
-});
+//   test.afterAll(async () => {
+//     await testClass.login.performLogin(0);
+//     await testClass.homeSteps.navigateToBrowse();
+//     await testClass.clearFolders();
+//     await testClass.context.close();
+// });
 });

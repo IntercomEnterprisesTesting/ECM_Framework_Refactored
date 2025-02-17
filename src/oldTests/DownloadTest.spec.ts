@@ -1,4 +1,4 @@
-import ConfigurationSteps from "@uiSteps/ConfigurationSteps";
+import ConfigurationSteps from "@uiSteps/PropertiesPageSteps";
 import HomeSteps from "@uiSteps/LoginPageSteps";
 import { test } from "@base-test";
 import Allure from "@allure";

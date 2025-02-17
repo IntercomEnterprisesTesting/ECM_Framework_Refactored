@@ -79,16 +79,14 @@ export default class HomePageSteps {
     }
 
     public async clickPropertiesButton(fileName: string) {
-        const fileLinkLocator = LinkUtil.getLinkSelector(fileName);    
-        await this.uiActions.element(fileLinkLocator, `Link for ${fileName}`).rightClick();
-        await this.uiActions.element(HomePage.PROFILE_MENU_BUTTON, "Properties Button").click();
-        await Assert.assertVisible(HomePage.PROPERTIES_WINDOW_DIV, "Properties Window");
+        await this.openActionMenu(fileName);
+        await this.uiActions.element(HomePage.PROPERTIES_BUTTON, "Properties Button").click();
+        await this.uiActions.element(HomePage.PROPERTIES_WINDOW_DIV, "Properties Window").waitTillVisible(5);
         // return new propertiesPage(this.page)
     } 
 
     public async checkOutFile(fileName: string) {
-        const fileLinkLocator = LinkUtil.getLinkSelector(fileName);    
-        await this.uiActions.element(fileLinkLocator, `Link for ${fileName}`).rightClick();
+        await this.openActionMenu(fileName);
         await this.uiActions.element(HomePage.CHECK_OUT_BUTTON, "Check Out Button").hover();
         await this.uiActions.element(HomePage.CHECK_OUT_ONLY_BUTTON, "Check Out Button").click();
         await Assert.assertVisible(HomePage.CHECK_OUT_IMG, "Check Out Image");

@@ -256,4 +256,16 @@ export default class Assert {
             }
         });
     }
+
+    public static async assertLocatorNotVisible(locator: Locator, description: string, softAssert = false) {
+        await test.step(`Verifying that ${description} is visible`, async () => {
+            try {
+                await expect(locator).not.toBeVisible({ timeout: 5000 });
+            } catch (error) {
+                if (!softAssert) {
+                    throw new Error(error);
+                }
+            }
+        });
+    }
 }

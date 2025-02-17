@@ -8,7 +8,7 @@ export default class DataBuilder {
 
   // Public properties to store the results
   public defaultFolder = "";
-  public defaultDocument = "";
+  public defaultDocument : DocumentClass;
   public defaultDocumentEntryTemplate = "";
   public mandatoryAttributesByDocumentType: Map<string, Attribute[]> = new Map();
   public allAttributesByDocumentType: Map<string, Attribute[]> = new Map();
@@ -139,11 +139,11 @@ export default class DataBuilder {
   }
 
   // Method to get the document type with "Default" marked as 'Y'
-  public getDefaultDocument(): string {
+  public getDefaultDocument(): DocumentClass {
     const defaultDocument = Array.from(this.foldersMap.values())
       .flatMap((folder) => folder.documents)
       .find((document) => document.isDefault);
-    return defaultDocument ? defaultDocument.documentType : ""; // Return the document type as a string or empty if not found
+    return defaultDocument;
   }
 
   public getDefaultDocumentEntryTemplate(): string {

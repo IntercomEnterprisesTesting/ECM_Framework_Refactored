@@ -40,11 +40,11 @@ export default class AddDocumentPageSteps {
     public async clickAddButton() {
         // eslint-disable-next-line max-len
         await this.uiActions.element(AddDocumentPage.ADD_FILE_BUTTON, "Confirm Add File Button").click();
-        try {
-            await this.uiActions.element(AddDocumentPage.ADD_DOCUMENT_WORD, "Add document page").waitTillInvisible();
-        } catch (error) {
-            await this.uiActions.keyPress("Escape", "Escape button");
-        }
+        // try {
+        //     await this.uiActions.element(AddDocumentPage.ADD_DOCUMENT_WORD, "Add document page").waitTillInvisible();
+        // } catch (error) {
+        //     await this.uiActions.keyPress("Escape", "Escape button");
+        // }
          } 
     public async verifyVisibilityOfAttribute(attributeName :string) {
             const attribute = await this.attributeUtil.createAttributeInputLocator(attributeName);

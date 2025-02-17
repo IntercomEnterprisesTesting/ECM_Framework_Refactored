@@ -75,6 +75,7 @@ export default class FolderNavigationUtil {
       try {
         const selector = this.getFolderSelector(folder, rootFolderName);
         await this.uiActions.element(selector, `${folder}`).click();
+        await this.uiActions.waitForDomContentLoaded();
         await this.assertFolderIsOpened(folder);
       } catch (error) {
         console.error(`Warning: Error navigating to folder "${folder}": ${error.message}`);

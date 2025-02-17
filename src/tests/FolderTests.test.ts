@@ -16,17 +16,12 @@ const testClass = new FolderTests();
 test.describe('[Folder Specs tests]', () => {
     test.beforeAll(async () => {
         await testClass.login.launchApplication();
-        await testClass.login.performLogin(0);
+        await testClass.login.performLogin(1);
         await testClass.homeSteps.navigateToBrowse();
     });
 
     test.beforeEach(() => {
         TestUtils.clearWarnings();
-    });
-
-    test('add document page', async () => {
-        const folderName = 'تقرير 39';
-        await testClass.folderNavigationUtil.navigateToDocumentFolder(folderName);
     });
 
     test('Verify that folder structure is correct (Static folders)', async () => {
@@ -77,5 +72,9 @@ test('Verify that Documents cannot be added under these folders level directly',
         }
         }
     TestUtils.checkWarnings();
+});
+
+  test.afterAll(async () => {
+    await testClass.page.close();
 });
 });

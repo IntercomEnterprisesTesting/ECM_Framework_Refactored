@@ -247,7 +247,7 @@ export default class UIElementActions {
    * @param wait time for element to be visible
    * @returns Promise<boolean>
    */
-  public async isVisible(sec: number): Promise<boolean> {
+  public async isVisible(sec?: number): Promise<boolean> {
     let visibility: boolean;
     await test.step(`Checking if ${this.description} is visible`, async () => {
       try {
