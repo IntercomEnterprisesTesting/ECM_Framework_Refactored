@@ -180,7 +180,7 @@ export default class UIElementActions {
     let value: string;
     await test.step(`Getting attribute value of ${this.description}`, async () => {
         const element = this.getLocator();
-        await element.waitFor();
+        await element.waitFor({ state: "attached", timeout: 5000 });
         value = (await element.getAttribute(attributeName)).trim();
       });
     return value;

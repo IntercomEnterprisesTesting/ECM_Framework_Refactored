@@ -29,4 +29,5 @@ export default class HomePage {
     static readonly TEST_FILE_SELECTOR = `//a[@class="anchorLink" and text() ='${TestConstants.TEST_FILE_NAME}']`;
     static readonly TOTAL_COUNT = `//span[@class="totalCount"]`;
     static readonly SIDE_MENU_LOADED = `//div[contains(@class,"dijitTreeNodeLoaded")]`;
+    static readonly EDIT_BTN = `//a[@title="Edit"]`;
 }

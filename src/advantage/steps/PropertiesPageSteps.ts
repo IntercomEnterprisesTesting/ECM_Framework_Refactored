@@ -6,6 +6,7 @@ import UIActions from "@uiActions/UIActions";
 // import CommonConstants from "../constants/CommonConstants";
 import AttributeUtil from "@utils/AttributeUtil";
 import DataBuilder from "Excel/DataBuilder";
+import { DocumentClass } from "Excel/types";
 
 export default class PropertiesPageSteps {
     private uiActions: UIActions;
@@ -17,11 +18,11 @@ export default class PropertiesPageSteps {
         this.excel = new DataBuilder();
     }
 
-    public async updateDocumentStatus(value:string) {
-        const Status = await this.attributeUtil.createAttributeInputSelector(PropertiesPage.DOCUMENT_STATUS);
-        await this.uiActions.element(Status, "Document status").waitTillVisible(5);
-        await this.uiActions.element(Status, "Document status").clear();
-        await this.uiActions.editBox(Status, "Document status").fill(value);
+    public async updateAttrAndSave(attribute:string, value:string) {
+        const Status = await this.attributeUtil.createAttributeInputSelector(attribute);
+        await this.uiActions.element(Status, `${attribute}`).waitTillVisible(5);
+        await this.uiActions.element(Status, `${attribute}`).clear();
+        await this.uiActions.editBox(Status, `${attribute}`).fill(value);
         await this.saveDocument();
     }
 
@@ -41,5 +42,19 @@ export default class PropertiesPageSteps {
 
     public async clickCancelButton() {
         await this.uiActions.element(PropertiesPage.CANCEL_BUTTON, "Cancel button").click();
+    }
+
+    public async checkAttrValue(attribute:string) {
+        const StatusSelector = await this.attributeUtil.createAttributeInputSelector(attribute);
+        const statusValueSelector = `${StatusSelector}/following-sibling::input`;
+        const value = await this.uiActions.element(statusValueSelector, "Document status value").getAttribute(`value`);
+        return value;
+    }
+
+    public async verifyAttributesEnabled(document: DocumentClass) {
+        for (const attribute of document.attributes) {
+            const attributeSelector = await this.attributeUtil.createAttributeInputSelector(attribute.attributeName);
+            await this.uiActions.element(attributeSelector, `${attribute}`).isEnabled();
+        }
     }
 }

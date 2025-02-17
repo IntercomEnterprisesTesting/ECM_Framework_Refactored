@@ -14,6 +14,7 @@ import AddDocumentPageSteps from '@uiSteps/AddDocumentPageSteps';
 import AttributeUtil from '@utils/AttributeUtil';
 import HomePage from '@pages/HomePage';
 import PropertiesPageSteps from '@uiSteps/PropertiesPageSteps';
+import CheckInPageSteps from '@uiSteps/CheckInPageSteps';
 
 export default class TestBase {
      browser: Browser;
@@ -30,6 +31,7 @@ export default class TestBase {
      attributeUtil: AttributeUtil;
      defaultFolder: string;
      properties: PropertiesPageSteps;
+     checkIn: CheckInPageSteps;
 
     constructor() {
         base.beforeAll(async ({ browser }) => {
@@ -47,6 +49,7 @@ export default class TestBase {
             this.addDocument = new AddDocumentPageSteps(this.uiActions, this.attributeUtil);
             this.homeSteps = new HomePageSteps(this.uiActions, this.folderNavigationUtil, this.addDocument);
             this.properties = new PropertiesPageSteps(this.uiActions, this.attributeUtil);
+            this.checkIn = new CheckInPageSteps(this.uiActions, this.attributeUtil);
         });
     }
 

@@ -5,5 +5,5 @@ export default class PropertiesPage {
     static readonly DOCUMENT_STATUS = "حاله المستند";
     static readonly SAVE_BUTTON = '//span[@class="dijitReset dijitInline dijitButtonText" and text()="Save"]';
     static readonly DOCUMENT_VERSION = `//input[@type="hidden" and @value = "2.0"]`;
-    static readonly CANCEL_BUTTON = `//span[@id = "CANCEL_ecm_widget_dialog_EditPropertiesDialog_1_label" and text()="Cancel"]`;
+    static readonly CANCEL_BUTTON = `//span[contains(@id ,"CANCEL_ecm_widget_dialog_EditPropertiesDialog") and text()="Cancel"]`;
 }

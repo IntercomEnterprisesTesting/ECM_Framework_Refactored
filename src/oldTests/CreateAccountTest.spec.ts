@@ -1,5 +1,5 @@
 import HomeSteps from "@uiSteps/LoginPageSteps";
-import RegistrationSteps from "@uiSteps/RegistrationSteps";
+import RegistrationSteps from "@uiSteps/CheckInPageSteps";
 import { test } from "@base-test";
 import Allure from "@allure";
 import ExcelUtil from "@utils/ExcelUtil";

@@ -82,14 +82,13 @@ export default class HomePageSteps {
         await this.openActionMenu(fileName);
         await this.uiActions.element(HomePage.PROPERTIES_BUTTON, "Properties Button").click();
         await this.uiActions.element(HomePage.PROPERTIES_WINDOW_DIV, "Properties Window").waitTillVisible(5);
-        // return new propertiesPage(this.page)
     } 
 
     public async checkOutFile(fileName: string) {
         await this.openActionMenu(fileName);
         await this.uiActions.element(HomePage.CHECK_OUT_BUTTON, "Check Out Button").hover();
         await this.uiActions.element(HomePage.CHECK_OUT_ONLY_BUTTON, "Check Out Button").click();
-        await Assert.assertVisible(HomePage.CHECK_OUT_IMG, "Check Out Image");
+        await this.uiActions.element(HomePage.CHECK_OUT_IMG, "Check Out Button").isVisible();
     } 
 
     public async checkInFile(fileName: string) {
@@ -162,5 +161,12 @@ export default class HomePageSteps {
 
     public async getTestFileSelector() {
         return HomePage.TEST_FILE_SELECTOR;
+    }
+
+    public async isDocEditable(fileName: string) : Promise<boolean> {
+        const fileLinkLocator = LinkUtil.getLinkSelector(fileName);
+        await this.uiActions.element(fileLinkLocator, `Link for ${fileName}`).rightClick();
+        const isVisible = await this.uiActions.element(HomePage.EDIT_BTN, "Edit Button").isVisible(5);
+        return isVisible;
     }
 }
