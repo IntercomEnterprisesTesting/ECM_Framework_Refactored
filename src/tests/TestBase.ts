@@ -13,6 +13,7 @@ import DataBuilder from 'Excel/DataBuilder';
 import AddDocumentPageSteps from '@uiSteps/AddDocumentPageSteps';
 import AttributeUtil from '@utils/AttributeUtil';
 import HomePage from '@pages/HomePage';
+import PropertiesPageSteps from '@uiSteps/PropertiesPageSteps';
 
 export default class TestBase {
      browser: Browser;
@@ -28,6 +29,7 @@ export default class TestBase {
      addDocument: AddDocumentPageSteps;
      attributeUtil: AttributeUtil;
      defaultFolder: string;
+     properties: PropertiesPageSteps;
 
     constructor() {
         base.beforeAll(async ({ browser }) => {
@@ -44,6 +46,7 @@ export default class TestBase {
             this.login = new LoginPageSteps(this.page, this.uiActions, this.usersReader);
             this.addDocument = new AddDocumentPageSteps(this.uiActions, this.attributeUtil);
             this.homeSteps = new HomePageSteps(this.uiActions, this.folderNavigationUtil, this.addDocument);
+            this.properties = new PropertiesPageSteps(this.uiActions, this.attributeUtil);
         });
     }
 
@@ -56,9 +59,7 @@ export default class TestBase {
                 const alertIsVisible = await this.uiActions.element(HomePage.FOLDER_IS_EMPTY_TEXT, "Folder is empty text").isVisible();
                 if (!alertIsVisible) {
                     await this.homeSteps.deleteUploadedFiles();
-                } else {
-                    return;
-                }
+                } 
             } catch (error) {
                 console.log(`Error: ${error.message}`); 
             }
