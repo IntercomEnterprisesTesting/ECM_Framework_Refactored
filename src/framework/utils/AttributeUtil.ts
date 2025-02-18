@@ -321,4 +321,11 @@ public async checkAttrAreDisabledForDocClass(documentClass: DocumentClass) {
         }
         }  
 }
+
+public async validateDocAttributes(documentClass: DocumentClass) : Promise<boolean> {
+    const expectedAttrs = this.dataBuilder.getAttributeNameByDocumentClass(documentClass);
+    const actualAttrs = await this.getAllActualAttrs();    
+    const isValid = StringUtil.validateListItems(expectedAttrs, actualAttrs);
+    return isValid;
+}
 }

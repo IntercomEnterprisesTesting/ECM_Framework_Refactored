@@ -50,6 +50,12 @@ export default class HomePageSteps {
             throw new Error();
         }
         }
+// return boolean value
+        public async isFileVisible(fileName : string) :Promise<boolean> {
+            const fileLinkSelector = LinkUtil.getLinkSelector(fileName);
+                const isVisible = await this.uiActions.element(fileLinkSelector, `file: ${fileName}`).isVisible(5);
+                return isVisible;
+            } 
 
     public async openActionMenu(fileName: string) {
             const fileLinkLocator = LinkUtil.getLinkSelector(fileName);

@@ -5,6 +5,7 @@
 import { test } from '@playwright/test';
 import TestUtils from '@utils/TestUtils';
 import PropertiesPage from '@pages/PropertiesPage';
+import HomePage from '@pages/HomePage';
 import TestBase from './TestBase';
 
 class SecurityMatrixManager extends TestBase {
@@ -15,82 +16,54 @@ class SecurityMatrixManager extends TestBase {
 
 const testClass = new SecurityMatrixManager();   
 
-test.describe('[Security matrix - Checker]', () => {
+test.describe('[Security matrix - Manager]', () => {
     test.beforeAll(async () => {
         await testClass.login.launchApplication();
     });
 
-    test('Verify that Viewer cannot add document', async () => {
+    test('Verify that Manager can not Access Document (Before Checker Approval)', async () => {
         const document = testClass.excel.getDefaultDocument();
-            await testClass.login.performLogin(2);
+        try {
+            await testClass.login.performLogin(1);
             await testClass.homeSteps.navigateToBrowse();
-                    try {
+            await testClass.homeSteps.openAddDoc(document);
+            const fileName = await testClass.addDocument.addDocument(document);
+            await testClass.homeSteps.verifyFileAdded(fileName);
+            await testClass.homeSteps.logOut();
+            await testClass.login.performLogin(3);
+            await testClass.homeSteps.navigateToBrowse();
             await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
-            const isEnabled = await testClass.homeSteps.checkAddButtonEnabled();
-                if (isEnabled) {
-                    throw new Error(`Bug : Viewer can add document ${document.documentType}`);
-                    }
+            const isVisible = await testClass.homeSteps.isFileVisible(fileName);
+            if (isVisible) {
+                TestUtils.addBug(`Bug: added file is visible to manager under document : ${document.documentType} before checker approval`);
+            }
                 } catch (error) {
-            TestUtils.addBug(`Bug: Viewer can add document ${document.documentType} - ${error.message}`);
+            TestUtils.addBug(`Bug: Manager can access document ${document.documentType} - ${error.message}`);
         } 
             await testClass.homeSteps.logOut();
             TestUtils.checkBugs();
     });
 
-    test('Verify that Checker cannot delete document', async () => {
-           const document = testClass.excel.getDefaultDocument();
-           await testClass.login.performLogin(1);
-           await testClass.homeSteps.navigateToBrowse();
-                   try {
-           await testClass.homeSteps.openAddDoc(document);
-           const fileName = await testClass.addDocument.addDocument(document);
-           await testClass.homeSteps.verifyFileAdded(fileName);
-           await testClass.homeSteps.logOut();
-           await testClass.login.performLogin(2);
-           await testClass.homeSteps.navigateToBrowse();
-           await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
-           const enabled = await testClass.homeSteps.isDeleteButtonEnabled(fileName);
-                   if (enabled) {
-                       throw new Error(`Bug : Delete button is enabled for ${document.documentType} while it should not be`);
-                   }
-               } catch (error) {
-           TestUtils.addBug(`Bug: Checker can delete docuemnt ${document.documentType} - ${error.message}`);
-       } 
+    test('Verify that Manager cannot add document', async () => {
+        const document = testClass.excel.getDefaultDocument();
+            await testClass.login.performLogin(3);
+            await testClass.homeSteps.navigateToBrowse();
+                    try {
+            await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+            const isEnabled = await testClass.homeSteps.checkAddButtonEnabled();
+                if (isEnabled) {
+                    throw new Error(`Bug : Add button is enabled for Manager under document ${document.documentType}`);
+                    }
+                } catch (error) {
+            TestUtils.addBug(`Bug: Manager can add document ${document.documentType} - ${error.message}`);
+        } 
             await testClass.homeSteps.logOut();
             TestUtils.checkBugs();
-       });
+    });
 
-    test('Verify that Checker can update document status from Not approved to approved', async () => {
-               const document = testClass.excel.getDefaultDocument();
-                       try {
-               await testClass.login.performLogin(1);
-               await testClass.homeSteps.navigateToBrowse();
-               await testClass.homeSteps.openAddDoc(document);
-               const fileName = await testClass.addDocument.addDocument(document);
-               await testClass.homeSteps.verifyFileAdded(fileName);
-               await testClass.homeSteps.logOut();
-               await testClass.login.performLogin(2);
-               await testClass.homeSteps.navigateToBrowse();
-               await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
-               await testClass.homeSteps.clickPropertiesButton(fileName);
-               const newStatus = "Approved";
-               await testClass.properties.updateAttrAndSave(PropertiesPage.DOCUMENT_STATUS, newStatus);
-               await testClass.homeSteps.clickPropertiesButton(fileName);
-               const status = await testClass.properties.checkAttrValue(PropertiesPage.DOCUMENT_STATUS);
-               await testClass.properties.clickCancelButton();
-                if (status !== newStatus) {
-            throw new Error(`Bug :Expected status to be ${newStatus} but got ${status}`);
-        }
-                   } catch (error) {
-               TestUtils.addBug(`Bug: Maker Failed to update docuemnt ${document.documentType} status from Not approved to Approved  - ${error.message}`);
-           } 
-                await testClass.homeSteps.logOut();
-                TestUtils.checkBugs();
-        });
-
-    test('Verify that Checker can update document status from Not approved to Rejected', async () => {
-                const document = testClass.excel.getDefaultDocument();
-                        try {
+    test('Verify that Manager can delete document after checker approval', async () => {
+            const document = testClass.excel.getDefaultDocument();
+            try {
                 await testClass.login.performLogin(1);
                 await testClass.homeSteps.navigateToBrowse();
                 await testClass.homeSteps.openAddDoc(document);
@@ -101,22 +74,23 @@ test.describe('[Security matrix - Checker]', () => {
                 await testClass.homeSteps.navigateToBrowse();
                 await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
                 await testClass.homeSteps.clickPropertiesButton(fileName);
-                const newStatus = "Rejected";
-                await testClass.properties.updateAttrAndSave(PropertiesPage.DOCUMENT_STATUS, newStatus);
-                await testClass.homeSteps.clickPropertiesButton(fileName);
-                const status = await testClass.properties.checkAttrValue(PropertiesPage.DOCUMENT_STATUS);
-                await testClass.properties.clickCancelButton();
-                 if (status !== newStatus) {
-             throw new Error(`Bug :Expected status to be ${newStatus} but got ${status}`);
-         }
-                    } catch (error) {
-                TestUtils.addBug(`Bug: Checker Failed to update docuemnt ${document.documentType} status from Not approved to Rejected - ${error.message}`);
-            } 
-                 await testClass.homeSteps.logOut();
-                 TestUtils.checkBugs();
-        });
+                await testClass.properties.updateAttrAndSave(PropertiesPage.DOCUMENT_STATUS, "Approved");
+                await testClass.homeSteps.logOut();
+                await testClass.login.performLogin(3);
+                await testClass.homeSteps.navigateToBrowse();
+                await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+                const isEnabled = await testClass.homeSteps.isDeleteButtonEnabled(fileName);
+                if (!isEnabled) {
+                    throw new Error(`Delete button is disabled for Manager under document:  ${document.documentType} while it should not be`);
+                }
+                } catch (error) {
+            TestUtils.addBug(`Bug: Manager can not delete docuemnt ${document.documentType} after checker approval- ${error.message}`);
+        } 
+             await testClass.homeSteps.logOut();
+             TestUtils.checkBugs();
+    });
 
-    test('Verify that Checker can not update document attributes after checker approval', async () => {
+    test('Verify that Manager can not update document attributes after checker approval', async () => {
         const document = testClass.excel.getDefaultDocument();
             try {
                 await testClass.login.performLogin(1);
@@ -130,16 +104,78 @@ test.describe('[Security matrix - Checker]', () => {
                 await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
                 await testClass.homeSteps.clickPropertiesButton(fileName);
                 await testClass.properties.updateAttrAndSave(PropertiesPage.DOCUMENT_STATUS, "Approved");
+                await testClass.homeSteps.logOut();
+                await testClass.login.performLogin(3);
+                await testClass.homeSteps.navigateToBrowse();
+                await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
                 await testClass.homeSteps.clickPropertiesButton(fileName);
                 await testClass.attributeUtil.checkAttrAreDisabledForDocClass(document);
                 await testClass.properties.clickCancelButton();
                 } catch (error) {
-                TestUtils.addBug(`Bug: Checker can update docuemnt ${document.documentType} attributes after checker approval- ${error.message}`);
+                TestUtils.addBug(`Bug: Manager can update docuemnt ${document.documentType} attributes after checker approval- ${error.message}`);
             } 
                  await testClass.homeSteps.logOut();
                  TestUtils.checkBugs();
-            });
- 
+    });
+
+    test('Verify that Manager can view document attributes after checker approval', async () => {
+    const document = testClass.excel.getDefaultDocument();
+            try {
+    await testClass.login.performLogin(1);
+    await testClass.homeSteps.navigateToBrowse();
+    await testClass.homeSteps.openAddDoc(document);
+    const fileName = await testClass.addDocument.addDocument(document);
+    await testClass.homeSteps.verifyFileAdded(fileName);
+    await testClass.homeSteps.logOut();
+    await testClass.login.performLogin(2);
+    await testClass.homeSteps.navigateToBrowse();
+    await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+    await testClass.homeSteps.clickPropertiesButton(fileName);
+    await testClass.properties.updateAttrAndSave(PropertiesPage.DOCUMENT_STATUS, "Approved");
+    await testClass.homeSteps.logOut();
+    await testClass.login.performLogin(3);
+    await testClass.homeSteps.navigateToBrowse();
+    await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+    await testClass.homeSteps.clickPropertiesButton(fileName);
+    const isValid = testClass.attributeUtil.validateDocAttributes(document);
+        if (!isValid) {
+            TestUtils.addBug(`Bug: ${document.documentType} attributes are not visible`);
+            }
+    await testClass.properties.clickCancelButton();
+        } catch (error) {
+    TestUtils.addBug(`Bug: Manager Failed to view docuemnt ${document.documentType} attributes - ${error.message}`);
+} 
+     await testClass.homeSteps.logOut();
+     TestUtils.checkBugs();
+    });
+
+    test('Verify that Manager can not update document version after checker approval', async () => {
+    const document = testClass.excel.getDefaultDocument();
+    try {
+        await testClass.login.performLogin(1);
+        await testClass.homeSteps.navigateToBrowse();
+        await testClass.homeSteps.openAddDoc(document);
+        const fileName = await testClass.addDocument.addDocument(document);
+        await testClass.homeSteps.verifyFileAdded(fileName);
+        await testClass.homeSteps.logOut();
+        await testClass.login.performLogin(2);
+        await testClass.homeSteps.navigateToBrowse();
+        await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+        await testClass.homeSteps.clickPropertiesButton(fileName);
+        await testClass.properties.updateAttrAndSave(PropertiesPage.DOCUMENT_STATUS, "Approved");
+        await testClass.homeSteps.logOut();
+        await testClass.login.performLogin(3);
+        await testClass.homeSteps.navigateToBrowse();
+        await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+        await testClass.homeSteps.openActionMenu(fileName);
+        await testClass.uiActions.element(HomePage.CHECK_OUT_BUTTON, "Check Out Button").isDisabled();
+        } catch (error) {
+    TestUtils.addBug(`Bug: Manager can update docuemnt ${document.documentType} version after checker approval- ${error.message}`);
+} 
+     await testClass.homeSteps.logOut();
+     TestUtils.checkBugs();
+    });
+
 //   test.afterAll(async () => {
 //     await testClass.login.performLogin(0);
 //     await testClass.homeSteps.navigateToBrowse();
