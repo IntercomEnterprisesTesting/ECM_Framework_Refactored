@@ -51,6 +51,21 @@ export default class TestBase {
             this.properties = new PropertiesPageSteps(this.uiActions, this.attributeUtil);
             this.checkIn = new CheckInPageSteps(this.uiActions, this.attributeUtil);
         });
+
+        base.beforeEach(async () => {
+            if (!this.context || this.context.pages().length === 0) {
+                this.context = await this.browser.newContext();
+                this.page = await this.context.newPage();
+                this.uiActions = new UIActions(this.page);
+                this.folderNavigationUtil = new FolderNavigationUtil(this.uiActions, this.excel, this.page);
+                this.attributeUtil = new AttributeUtil(this.page);
+                this.login = new LoginPageSteps(this.page, this.uiActions, this.usersReader);
+                this.addDocument = new AddDocumentPageSteps(this.uiActions, this.attributeUtil);
+                this.homeSteps = new HomePageSteps(this.uiActions, this.folderNavigationUtil, this.addDocument);
+                this.properties = new PropertiesPageSteps(this.uiActions, this.attributeUtil);
+                this.checkIn = new CheckInPageSteps(this.uiActions, this.attributeUtil);
+            }
+        });
     }
 
     public async clearFolders() {
