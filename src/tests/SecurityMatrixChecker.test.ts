@@ -22,7 +22,7 @@ test.describe('[Security matrix - Checker]', () => {
         await testClass.login.launchApplication();
     });
 
-    test('Verify that Viewer cannot add document', async () => {
+    test('Verify that Checker cannot add document', async () => {
         const document = testClass.excel.getDefaultDocument();
             await testClass.login.performLogin(2);
             await testClass.homeSteps.navigateToBrowse();
@@ -30,10 +30,10 @@ test.describe('[Security matrix - Checker]', () => {
             await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
             const isEnabled = await testClass.homeSteps.checkAddButtonEnabled();
                 if (isEnabled) {
-                    throw new Error(`Bug : Viewer can add document ${document.documentType}`);
+                    throw new Error(`Bug : Checker can add document ${document.documentType}`);
                     }
                 } catch (error) {
-            TestUtils.addBug(`Bug: Viewer can add document ${document.documentType} - ${error.message}`);
+            TestUtils.addBug(`Bug: Checker can add document ${document.documentType} - ${error.message}`);
         } 
             await testClass.homeSteps.logOut();
             TestUtils.checkBugs();
