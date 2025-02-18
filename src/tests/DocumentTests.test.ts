@@ -25,7 +25,7 @@ test.describe('[Document Specs tests]', () => {
     });
 
     test.beforeEach(() => {
-        TestUtils.clearWarnings();
+        TestUtils.clearBugs();
     });
 
 test('Verify all documents have the correct attributes', async () => {
@@ -39,14 +39,14 @@ test('Verify all documents have the correct attributes', async () => {
                         const isValid = StringUtil.validateListItems(expectedAttrs, actualAttrs);
                         await testClass.uiActions.keyPress("Escape", `Exiting document : ${document.documentType}`);
                     if (!isValid) {
-                        TestUtils.addWarning(`Warning: ${document.documentType} attributes are not identical`);
+                        TestUtils.addBug(`Bug: ${document.documentType} attributes are not identical`);
                     }
                     });
                 } catch (error) {
-                    TestUtils.addWarning(`Warning: Verify all documents have the correct attributes for document ${document.documentType} failed - ${error.message}`);
+                    TestUtils.addBug(`Bug: Verify all documents have the correct attributes for document ${document.documentType} failed - ${error.message}`);
                 }
         }
-        TestUtils.checkWarnings();
+        TestUtils.checkBugs();
     }); 
 
 test('Verify all documents mandatory attributes are correct', async () => {
@@ -59,10 +59,10 @@ test('Verify all documents mandatory attributes are correct', async () => {
                     await testClass.uiActions.keyPress("Escape", `Exiting document : ${document.documentType}`);
                 });
             } catch (error) {
-                TestUtils.addWarning(`Warning: Verify all documents mandatory fields are correct for document ${document.documentType} failed - ${error.message}`);
+                TestUtils.addBug(`Bug: Verify all documents mandatory fields are correct for document ${document.documentType} failed - ${error.message}`);
             }
     }
-    TestUtils.checkWarnings();
+    TestUtils.checkBugs();
 });
 
 test('Verify all documents max length attributes are correct', async () => {
@@ -74,10 +74,10 @@ test('Verify all documents max length attributes are correct', async () => {
                     await testClass.attributeUtil.checkMaxLengthForAttributes(document);
                 });
             } catch (error) {
-                TestUtils.addWarning(`Warning: Verify all documents max length fields are correct for document ${document.documentType} failed - ${error.message}`);
+                TestUtils.addBug(`Bug: Verify all documents max length fields are correct for document ${document.documentType} failed - ${error.message}`);
             }
     }
-    TestUtils.checkWarnings();
+    TestUtils.checkBugs();
 });
 
 test('Verify user cannot add document without mandatory fields', async () => {
@@ -92,10 +92,10 @@ test('Verify user cannot add document without mandatory fields', async () => {
                     await testClass.uiActions.keyPress("Escape", "Escape Key");
                 });
             } catch (error) {
-                TestUtils.addWarning(`Warning: Verify user cannot add document without mandatory fields for document ${document.documentType} failed - ${error.message}`);
+                TestUtils.addBug(`Bug: Verify user cannot add document without mandatory fields for document ${document.documentType} failed - ${error.message}`);
             }
     }
-    TestUtils.checkWarnings();
+    TestUtils.checkBugs();
 });
 
 test('Verify user can add document with only mandatory fields', async () => {
@@ -111,11 +111,11 @@ test('Verify user can add document with only mandatory fields', async () => {
                     }
                 });
             } catch (error) {
-                TestUtils.addWarning(`Warning: ${document.documentType} could not be found - ${error.message}`);           
+                TestUtils.addBug(`Bug: ${document.documentType} could not be found - ${error.message}`);           
             }
     }
 
-    TestUtils.checkWarnings();
+    TestUtils.checkBugs();
 });
 
 test('Verify list items have the correct values for all List attributes', async () => {
@@ -130,17 +130,17 @@ test('Verify list items have the correct values for all List attributes', async 
                     const actualItems = await testClass.attributeUtil.extractActualListItemsForAttribute(attribute.attributeName);
                     const isValid = StringUtil.validateListItems(expectedItems, actualItems);
                     if (!isValid) {
-                        TestUtils.addWarning(`Warning: ${document.documentType} list items are not identical`);
+                        TestUtils.addBug(`Bug: ${document.documentType} list items are not identical`);
                     }
                     await testClass.uiActions.keyPress("Escape", "Exit docuement Screen");
                 });
             } catch (error) {
-                TestUtils.addWarning(`Warning: ${document.documentType} could not be found - ${error.message}`);
+                TestUtils.addBug(`Bug: ${document.documentType} could not be found - ${error.message}`);
             }
         }   
     }
 
-    TestUtils.checkWarnings();
+    TestUtils.checkBugs();
 });
 
 // test('Verify that user cannot add document with future date', async () => {

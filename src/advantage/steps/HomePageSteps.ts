@@ -81,6 +81,7 @@ export default class HomePageSteps {
     public async clickPropertiesButton(fileName: string) {
         await this.openActionMenu(fileName);
         await this.uiActions.element(HomePage.PROPERTIES_BUTTON, "Properties Button").click();
+        await this.uiActions.waitForDomContentLoaded();
         await this.uiActions.element(HomePage.PROPERTIES_WINDOW_DIV, "Properties Window").waitTillVisible(5);
     } 
 
@@ -147,7 +148,6 @@ export default class HomePageSteps {
     public async openAddDoc(documentClass: DocumentClass) {
         await this.folderNavigation.navigateToDocumentFolder(documentClass.documentType);
         await this.clickAddDocumentButton();
-        await this.addDocumentSteps.selectEntryTemplate(documentClass.documentType);
     }
     
     public async navigateToDocumentFolder(folderName: string) {
@@ -165,8 +165,27 @@ export default class HomePageSteps {
 
     public async isDocEditable(fileName: string) : Promise<boolean> {
         const fileLinkLocator = LinkUtil.getLinkSelector(fileName);
+        const isCollapsed = await this.uiActions.element(HomePage.PROPERTIES_DIV_BTN, "Properties button").isVisible(5);
+        if (isCollapsed) {
+            await this.uiActions.element(HomePage.PROPERTIES_DIV_BTN, "Properties button").click();
+        }
         await this.uiActions.element(fileLinkLocator, `Link for ${fileName}`).rightClick();
+        await this.uiActions.element(HomePage.ACTION_MENU, "Edit Button").isVisible();
+        await this.uiActions.waitForDomContentLoaded();
+        await this.uiActions.element(HomePage.PROPERTIES_DIV, "Edit Button").waitTillVisible(5);
         const isVisible = await this.uiActions.element(HomePage.EDIT_BTN, "Edit Button").isVisible(5);
         return isVisible;
+    }
+
+    public async isDeleteButtonEnabled(fileName: string) : Promise<boolean> {
+        const fileLinkLocator = LinkUtil.getLinkSelector(fileName);
+        await this.uiActions.element(fileLinkLocator, `Link for ${fileName}`).rightClick();
+        const isEnabled = await this.uiActions.element(HomePage.DELETE_BUTTON, "Delete Button").isEnabled();
+        return isEnabled;
+    }
+
+    public async checkAddButtonEnabled() : Promise<boolean> {
+        const isEnabled = await this.uiActions.element(HomePage.ADD_DOCUMENT_BUTTON, "Add Document Button").isEnabled();
+        return isEnabled;
     }
 }

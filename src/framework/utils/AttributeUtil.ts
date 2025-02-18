@@ -58,10 +58,10 @@ export default class AttributeUtil {
       try {
         const isVisible = await this.uiActions.element(selector, `attribute: ${attribute}`).isVisible(60);
         if (!isVisible) {
-          TestUtils.addWarning(`Warning: Missing attribute: ${attribute} under document ${document.documentType}`);
+          TestUtils.addBug(`Bug: Missing attribute: ${attribute.attributeName} under document ${document.documentType}`);
         }
       } catch (error) {
-        TestUtils.addWarning(`Error checking visibility for attribute: ${attribute} under document ${document.documentType}. Error: ${error.message}`);
+        TestUtils.addBug(`Error checking visibility for attribute: ${attribute.attributeName} under document ${document.documentType}. Error: ${error.message}`);
       }
     }
   }
@@ -72,10 +72,10 @@ export default class AttributeUtil {
       try {
         const isAttributeMandatory = await this.isAttributeMandatory(attribute.attributeName);
         if (!isAttributeMandatory) {
-          TestUtils.addWarning(`Warning: attribute: ${attribute.attributeName} under document ${document.documentType} is not mandatory while it should be`);
+          TestUtils.addBug(`Bug: attribute: ${attribute.attributeName} under document ${document.documentType} is not mandatory while it should be`);
         }
       } catch (error) {
-        TestUtils.addWarning(`Error checking mandatory attributes for attribute: ${attribute} under document ${document.documentType}. Error: ${error.message}`);
+        TestUtils.addBug(`Error checking mandatory attributes for attribute: ${attribute} under document ${document.documentType}. Error: ${error.message}`);
       }
     }
   }
@@ -86,10 +86,10 @@ export default class AttributeUtil {
       try {
         const isAttributeMandatory = await this.isAttributeMandatory(attribute.attributeName);
         if (isAttributeMandatory) {
-          TestUtils.addWarning(`Warning: attribute: ${attribute.attributeName} under document ${document.documentType} is mandatory while it should not be`);
+          TestUtils.addBug(`Bug: attribute: ${attribute.attributeName} under document ${document.documentType} is mandatory while it should not be`);
         }
       } catch (error) {
-        TestUtils.addWarning(`Error checking mandatory attributes for attribute: ${attribute} under document ${document.documentType}. Error: ${error.message}`);
+        TestUtils.addBug(`Error checking mandatory attributes for attribute: ${attribute} under document ${document.documentType}. Error: ${error.message}`);
       }
     }
   }
@@ -199,7 +199,7 @@ export default class AttributeUtil {
         await this.uiActions.element(maxLength, `Max length locator for attribute ${attribute.attributeName}`).waitForPresent();
       } catch (error) {
         // Log an error if the locator is not attached
-        TestUtils.addWarning(`Max length verification failed for attribute "${attribute.attributeName}" under document "${document.documentType} with expected max length to be ${attribute.maxLength} : ${error.message}`);
+        TestUtils.addBug(`Max length verification failed for attribute "${attribute.attributeName}" under document "${document.documentType} with expected max length to be ${attribute.maxLength} : ${error.message}`);
         allAttributesValid = false; // Mark as invalid if the locator is not attached
       }
     }
@@ -291,7 +291,6 @@ return allTexts;
 public async getAllActualAttrs(): Promise<string[]> {
   const labels: string[] = [];
   const locator = this.page.locator('//label[contains(@id, "pvr_widget_Property_") and @id]');
-  
   try {
       const count = await locator.count();
       for (let i = 0; i < count; i++) {
@@ -303,8 +302,23 @@ public async getAllActualAttrs(): Promise<string[]> {
   } catch (error) {
       console.error(`Error extracting property labels: ${error.message}`);
   }
-  console.log(`all attributes = ${labels}`);
-
   return labels;
+}
+
+public async checkAttrAreDisabledForDocClass(documentClass: DocumentClass) {
+   for (const attribute of documentClass.attributes) {
+      const locator = await this.createAttributeInputSelector(attribute.attributeName);
+      try {
+       // Wait for the attribute to be visible
+       await this.uiActions.element(locator, `Attribute: ${attribute.attributeName}`).waitForPresent();
+        // Check if the input/select/textarea element is disabled
+        const isEditable = await this.uiActions.element(locator, `Attribute: ${attribute.attributeName}`).isEditable();
+        if (isEditable) {
+         TestUtils.addBug(`Bug : Attribute "${attribute.attributeName}" under document type "${documentClass.documentType}" is enabled but should be disabled.`); // Log if the attribute is not disabled
+          }
+        } catch (e) {
+         TestUtils.addBug(`Error checking attribute: ${attribute.attributeName} under document type ${documentClass.documentType}: ${e.message}`); // Log if the attribute is not found or not visible
+        }
+        }  
 }
 }

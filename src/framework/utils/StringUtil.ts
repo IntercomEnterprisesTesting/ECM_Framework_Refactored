@@ -145,7 +145,7 @@ export default class StringUtil {
       const normalizedActualList = normalizeSpaces(actualList);
   
       if (normalizedExpectedList.length === 0 || normalizedActualList.length === 0) {
-          TestUtils.addWarning(`List validation failed: either actual or expected list is empty.`);
+          TestUtils.addBug(`List validation failed: either actual or expected list is empty.`);
           return false;
       }
   
@@ -154,9 +154,9 @@ export default class StringUtil {
       const extraItems = normalizedActualList.filter((actualItem) => !normalizedExpectedList.some((expectedItem) => expectedItem === actualItem));
   
       if (missingItems.length || extraItems.length) {
-          TestUtils.addWarning(`Document type mismatch found in list items.`);
-          if (missingItems.length) TestUtils.addWarning(`Missing items: ${missingItems.join(", ")}`);
-          if (extraItems.length) TestUtils.addWarning(`Extra items: ${extraItems.join(", ")}`);
+          TestUtils.addBug(`Document type mismatch found in list items.`);
+          if (missingItems.length) TestUtils.addBug(`Missing items: ${missingItems.join(", ")}`);
+          if (extraItems.length) TestUtils.addBug(`Extra items: ${extraItems.join(", ")}`);
           return false; 
       }
   

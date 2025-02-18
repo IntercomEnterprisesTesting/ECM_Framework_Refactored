@@ -126,7 +126,7 @@ export default class AddDocumentPageSteps {
         try {
         await this.uiActions.element(AddDocumentPage.MANDATORY_FIELD_ERROR_MESSAGE_LOCATOR, "Mandatory field error message").isVisible(5);
         } catch (error) {
-              TestUtils.addWarning("Mandatory field error did not appear");
+              TestUtils.addBug("Mandatory field error did not appear");
         }
     }
 }

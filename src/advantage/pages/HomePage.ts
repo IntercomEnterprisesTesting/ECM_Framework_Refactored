@@ -21,6 +21,7 @@ export default class HomePage {
     static readonly CHECK_OUT_IMG = `//img[@class="ecmStatusIcon ecmLockIcon "]`;
     static readonly SEARCH_BUTTON = `//tr[@role="menuitem" and @aria-label="Search "]`;
     static readonly SEARCH_TEXTBOX = `//input[@title="Search name contains"]`;
+    static readonly ACTION_MENU = `//table[contains(@class,"dijitMenuActive")]`;
     static readonly DELETE_BUTTON = '//table[contains(@class,"dijitMenuActive")]//td[text()="Delete"]';
     static readonly CONFIRM_DELETE_BUTTON = `//span[contains(@id,"ecm_widget_Button") and text()="Delete"]`;
     static readonly PROFILE_MENU_BUTTON = '//span[contains(@title,"User session for")]';
@@ -30,4 +31,6 @@ export default class HomePage {
     static readonly TOTAL_COUNT = `//span[@class="totalCount"]`;
     static readonly SIDE_MENU_LOADED = `//div[contains(@class,"dijitTreeNodeLoaded")]`;
     static readonly EDIT_BTN = `//a[@title="Edit"]`;
+    static readonly PROPERTIES_DIV = `//div[@class="editPropertiesLinkAction"]`;
+    static readonly PROPERTIES_DIV_BTN = `//div[@title="Restore Section" and @zn_id]`;
 }

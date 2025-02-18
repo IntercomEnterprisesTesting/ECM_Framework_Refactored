@@ -21,7 +21,7 @@ test.describe('[Folder Specs tests]', () => {
     });
 
     test.beforeEach(() => {
-        TestUtils.clearWarnings();
+        TestUtils.clearBugs();
     });
 
     test('Verify that folder structure is correct (Static folders)', async () => {
@@ -33,11 +33,11 @@ test.describe('[Folder Specs tests]', () => {
                 await testClass.folderNavigationUtil.navigateToFolder(folderName);
                 await testClass.folderNavigationUtil.assertFolderIsOpened(folderName);
             } catch (error) {
-                TestUtils.addWarning(`Warning: Failed to navigate to document folder ${folderName} - ${error.message}`);
+                TestUtils.addBug(`Bug: Failed to navigate to document folder ${folderName} - ${error.message}`);
             }
         });
     }
-    TestUtils.checkWarnings();
+    TestUtils.checkBugs();
 });
 
 test('Verify that Documents cannot be added under these folders level directly', async () => {
@@ -50,10 +50,10 @@ test('Verify that Documents cannot be added under these folders level directly',
                     await testClass.folderNavigationUtil.assertFolderIsOpened(folderName);
                     const isDisabled = await testClass.uiActions.element(HomePage.ADD_DOCUMENT_BUTTON, "add document button").isDisabled();
                     if (isDisabled === false) {
-                      TestUtils.addWarning(`Warning: user can add files under folder ${folderName} while he should not`);
+                      TestUtils.addBug(`Bug: user can add files under folder ${folderName} while he should not`);
                     }
                 } catch (error) {
-                    TestUtils.addWarning(`Warning: user can add files under folder ${folderName} while he should not - ${error.message}`); 
+                    TestUtils.addBug(`Bug: user can add files under folder ${folderName} while he should not - ${error.message}`); 
                 }
             });
         } else {
@@ -63,15 +63,15 @@ test('Verify that Documents cannot be added under these folders level directly',
                     await testClass.folderNavigationUtil.assertFolderIsOpened(folderName);
                     const isEnabled = await testClass.uiActions.element(HomePage.ADD_DOCUMENT_BUTTON, "add document button").isEnabled();
                     if (isEnabled === false) {
-                        TestUtils.addWarning(`Warning: user cannot add files under folder ${folderName} while he should`);
+                        TestUtils.addBug(`Bug: user cannot add files under folder ${folderName} while he should`);
                 }
                     } catch (error) {
-                    TestUtils.addWarning(`Warning: user cannot add files under folder ${folderName} while he should - ${error.message}`); 
+                    TestUtils.addBug(`Bug: user cannot add files under folder ${folderName} while he should - ${error.message}`); 
                 }
             });
         }
         }
-    TestUtils.checkWarnings();
+    TestUtils.checkBugs();
 });
 
   test.afterAll(async () => {
