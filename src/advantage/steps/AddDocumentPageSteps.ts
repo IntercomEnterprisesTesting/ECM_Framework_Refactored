@@ -58,7 +58,7 @@ export default class AddDocumentPageSteps {
            if (entryTemplate) {
             await this.uiActions.editBox(AddDocumentPage.ENTRY_TEMPLATE_INPUT, "Entry template").fill(entryTemplate);
             await this.uiActions.keyPress("Enter", "Enter Key");
-            // await this.uiActions.waitForDomContentLoaded();
+            await this.uiActions.waitForDomContentLoaded();
             await this.uiActions.element(AddDocumentPage.ATTRIBUTES_DIV, "Attributes div").isVisible(5);
            }
         }

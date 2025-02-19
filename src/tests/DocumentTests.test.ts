@@ -73,6 +73,7 @@ test('Verify all documents max length attributes are correct', async () => {
                 await test.step(`checking max length attributes for document: ${document.documentType}`, async () => {
                     await testClass.homeSteps.openAddDoc(document);
                     await testClass.attributeUtil.checkMaxLengthForAttributes(document);
+                    await testClass.uiActions.keyPress("Escape", `Exiting document : ${document.documentType}`);
                 });
             } catch (error) {
                 TestUtils.addBug(`Bug: Verify all documents max length fields are correct for document ${document.documentType} failed - ${error.message}`);
@@ -110,7 +111,7 @@ test('Verify user can add document with only mandatory fields', async () => {
                     }
                 });
             } catch (error) {
-                TestUtils.addBug(`Bug: ${document.documentType} could not be found - ${error.message}`);           
+                TestUtils.addBug(`Bug: document : ${document.documentType} was not added successfully - ${error.message}`);           
             }
     }
 });

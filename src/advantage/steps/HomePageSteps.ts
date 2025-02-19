@@ -155,17 +155,17 @@ export default class HomePageSteps {
     
     public async openAddDoc(documentClass: DocumentClass) {
         await this.folderNavigation.navigateToDocumentFolder(documentClass.documentType);
-        await this.clickAddDocumentButton();
-        await this.addDocumentSteps.selectEntryTemplate(documentClass.documentType);
+        await this.clickAddDocumentButton(documentClass);
     }
     
     public async navigateToDocumentFolder(folderName: string) {
         await this.folderNavigation.navigateToFolder(folderName);
     }
 
-    public async clickAddDocumentButton() {
+    public async clickAddDocumentButton(documentClass: DocumentClass) {
         await this.uiActions.element(HomePage.ADD_DOCUMENT_BUTTON, "Add Document Button").click();
         await this.uiActions.element(HomePage.ADD_DOCUMENT_WINDOWS_DIV, "Add Document Window").isVisible(60);
+        await this.addDocumentSteps.selectEntryTemplate(documentClass.documentType);
     }
 
     public async getTestFileSelector() {

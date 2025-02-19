@@ -203,7 +203,6 @@ export default class AttributeUtil {
         allAttributesValid = false; // Mark as invalid if the locator is not attached
       }
     }
-    await this.uiActions.keyPress("Escape", `Exiting document : ${document.documentType}`);
     return allAttributesValid; // Return the overall result
   }
 
