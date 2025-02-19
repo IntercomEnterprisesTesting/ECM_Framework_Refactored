@@ -28,6 +28,7 @@ export default class HomePageSteps {
     private async clickSideMenuButton() {
         await this.uiActions.element(HomePage.FEATURES_MENU, "Features Menu Button").waitTillVisible(5);
         await this.uiActions.element(HomePage.SIDE_MENU_BUTTON, "Side Menu Button").click();
+        await this.verifyMenuIsOpened();
     }
     private async clickBrowseButton() {
         await this.uiActions.waitForDomContentLoaded();
