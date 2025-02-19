@@ -4,8 +4,6 @@
 /* eslint-disable @typescript-eslint/no-useless-constructor */
 import { test } from '@playwright/test';
 import TestUtils from '@utils/TestUtils';
-import HomePage from '@pages/HomePage';
-import AddDocumentPage from '@pages/AddDocumentPage';
 import PropertiesPage from '@pages/PropertiesPage';
 import TestBase from './TestBase';
 
@@ -18,8 +16,14 @@ class SecurityMatrixChecker extends TestBase {
 const testClass = new SecurityMatrixChecker();   
 
 test.describe('[Security matrix - Checker]', () => {
-    test.beforeAll(async () => {
-        await testClass.login.launchApplication();
+    test.beforeEach(async () => {
+        TestUtils.clearBugs(); // Create a new page
+        await testClass.launchApplication();
+    });
+
+    test.afterEach(async () => {
+        await TestUtils.checkBugs(); // Ensure bugs are resolved before closing the page
+        await testClass.context.close(); // Close the page after resolving bugs
     });
 
     test('Verify that Checker cannot add document', async () => {
@@ -30,13 +34,11 @@ test.describe('[Security matrix - Checker]', () => {
             await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
             const isEnabled = await testClass.homeSteps.checkAddButtonEnabled();
                 if (isEnabled) {
-                    throw new Error(`Bug : Checker can add document ${document.documentType}`);
+                    TestUtils.addBug(`Bug : Checker can add document ${document.documentType}`);
                     }
                 } catch (error) {
             TestUtils.addBug(`Bug: Checker can add document ${document.documentType} - ${error.message}`);
         } 
-            await testClass.homeSteps.logOut();
-            TestUtils.checkBugs();
     });
 
     test('Verify that Checker cannot delete document', async () => {
@@ -53,14 +55,12 @@ test.describe('[Security matrix - Checker]', () => {
            await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
            const enabled = await testClass.homeSteps.isDeleteButtonEnabled(fileName);
                    if (enabled) {
-                       throw new Error(`Bug : Delete button is enabled for ${document.documentType} while it should not be`);
+                    TestUtils.addBug(`Bug : Delete button is enabled for ${document.documentType} while it should not be`);
                    }
                } catch (error) {
            TestUtils.addBug(`Bug: Checker can delete docuemnt ${document.documentType} - ${error.message}`);
        } 
-            await testClass.homeSteps.logOut();
-            TestUtils.checkBugs();
-       });
+    });
 
     test('Verify that Checker can update document status from Not approved to approved', async () => {
                const document = testClass.excel.getDefaultDocument();
@@ -81,14 +81,12 @@ test.describe('[Security matrix - Checker]', () => {
                const status = await testClass.properties.checkAttrValue(PropertiesPage.DOCUMENT_STATUS);
                await testClass.properties.clickCancelButton();
                 if (status !== newStatus) {
-            throw new Error(`Bug :Expected status to be ${newStatus} but got ${status}`);
+                    TestUtils.addBug(`Bug :Expected status to be ${newStatus} but got ${status}`);
         }
                    } catch (error) {
                TestUtils.addBug(`Bug: Maker Failed to update docuemnt ${document.documentType} status from Not approved to Approved  - ${error.message}`);
            } 
-                await testClass.homeSteps.logOut();
-                TestUtils.checkBugs();
-        });
+    });
 
     test('Verify that Checker can update document status from Not approved to Rejected', async () => {
                 const document = testClass.excel.getDefaultDocument();
@@ -109,14 +107,12 @@ test.describe('[Security matrix - Checker]', () => {
                 const status = await testClass.properties.checkAttrValue(PropertiesPage.DOCUMENT_STATUS);
                 await testClass.properties.clickCancelButton();
                  if (status !== newStatus) {
-             throw new Error(`Bug :Expected status to be ${newStatus} but got ${status}`);
+                    TestUtils.addBug(`Bug :Expected status to be ${newStatus} but got ${status}`);
          }
                     } catch (error) {
                 TestUtils.addBug(`Bug: Checker Failed to update docuemnt ${document.documentType} status from Not approved to Rejected - ${error.message}`);
             } 
-                 await testClass.homeSteps.logOut();
-                 TestUtils.checkBugs();
-        });
+    });
 
     test('Verify that Checker can not update document attributes after checker approval', async () => {
         const document = testClass.excel.getDefaultDocument();
@@ -138,14 +134,13 @@ test.describe('[Security matrix - Checker]', () => {
                 } catch (error) {
                 TestUtils.addBug(`Bug: Checker can update docuemnt ${document.documentType} attributes after checker approval- ${error.message}`);
             } 
-                 await testClass.homeSteps.logOut();
-                 TestUtils.checkBugs();
-            });
+    });
  
-//   test.afterAll(async () => {
-//     await testClass.login.performLogin(0);
-//     await testClass.homeSteps.navigateToBrowse();
-//     await testClass.clearFolders();
-//     await testClass.context.close();
-// });
+  test.afterAll(async () => {
+    await testClass.launchApplication();
+    await testClass.login.performLogin(0);
+    await testClass.homeSteps.navigateToBrowse();
+    await testClass.clearFolders();
+    await testClass.context.close();
+});
 });

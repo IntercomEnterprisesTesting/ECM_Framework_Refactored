@@ -4,6 +4,7 @@ import HomePage from "@pages/HomePage";
 import UIActions from "@uiActions/UIActions";
 import FolderNavigationUtil from "@utils/FolderNavigationUtil";
 import LinkUtil from "@utils/LinkUtil";
+import TestUtils from "@utils/TestUtils";
 import { DocumentClass } from "Excel/types";
 import AddDocumentPageSteps from "./AddDocumentPageSteps";
 
@@ -47,11 +48,12 @@ export default class HomePageSteps {
         try {
             await this.uiActions.element(fileLinkSelector, `file: ${fileName}`).waitTillVisible(5);
         } catch (error) {
+            TestUtils.addBug(`File ${fileName} not added`);
             throw new Error();
         }
         }
 // return boolean value
-        public async isFileVisible(fileName : string) :Promise<boolean> {
+    public async isFileVisible(fileName : string) :Promise<boolean> {
             const fileLinkSelector = LinkUtil.getLinkSelector(fileName);
                 const isVisible = await this.uiActions.element(fileLinkSelector, `file: ${fileName}`).isVisible(5);
                 return isVisible;
@@ -154,6 +156,7 @@ export default class HomePageSteps {
     public async openAddDoc(documentClass: DocumentClass) {
         await this.folderNavigation.navigateToDocumentFolder(documentClass.documentType);
         await this.clickAddDocumentButton();
+        await this.addDocumentSteps.selectEntryTemplate(documentClass.documentType);
     }
     
     public async navigateToDocumentFolder(folderName: string) {

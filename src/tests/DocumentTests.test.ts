@@ -19,7 +19,7 @@ const testClass = new DocumentTests();
 
 test.describe('[Document Specs tests]', () => {
     test.beforeAll(async () => {
-        await testClass.login.launchApplication();
+        await testClass.launchApplication();
         await testClass.login.performLogin(1);
         await testClass.homeSteps.navigateToBrowse();
     });
@@ -28,15 +28,18 @@ test.describe('[Document Specs tests]', () => {
         TestUtils.clearBugs();
     });
 
+    test.afterEach(() => {
+        TestUtils.checkBugs();
+    });
+
 test('Verify all documents have the correct attributes', async () => {
         const documents: DocumentClass[] = testClass.excel.getAllDocumentTypes();
         for (const document of documents) {
                 try {
                     await test.step(`checking attributes for document: ${document.documentType}`, async () => {
                         await testClass.homeSteps.openAddDoc(document);
-                        const expectedAttrs = testClass.excel.getAttributeNameByDocumentClass(document);
-                        const actualAttrs = await testClass.attributeUtil.getAllActualAttrs();    
-                        const isValid = StringUtil.validateListItems(expectedAttrs, actualAttrs);
+                        await testClass.addDocument.fillMandatoryAttributes(document);
+                        const isValid = await testClass.attributeUtil.validateDocAttributes(document);
                         await testClass.uiActions.keyPress("Escape", `Exiting document : ${document.documentType}`);
                     if (!isValid) {
                         TestUtils.addBug(`Bug: ${document.documentType} attributes are not identical`);
@@ -46,7 +49,6 @@ test('Verify all documents have the correct attributes', async () => {
                     TestUtils.addBug(`Bug: Verify all documents have the correct attributes for document ${document.documentType} failed - ${error.message}`);
                 }
         }
-        TestUtils.checkBugs();
     }); 
 
 test('Verify all documents mandatory attributes are correct', async () => {
@@ -62,8 +64,7 @@ test('Verify all documents mandatory attributes are correct', async () => {
                 TestUtils.addBug(`Bug: Verify all documents mandatory fields are correct for document ${document.documentType} failed - ${error.message}`);
             }
     }
-    TestUtils.checkBugs();
-});
+    });
 
 test('Verify all documents max length attributes are correct', async () => {
     const documents: DocumentClass[] = testClass.excel.getAllDocumentTypes();
@@ -77,7 +78,6 @@ test('Verify all documents max length attributes are correct', async () => {
                 TestUtils.addBug(`Bug: Verify all documents max length fields are correct for document ${document.documentType} failed - ${error.message}`);
             }
     }
-    TestUtils.checkBugs();
 });
 
 test('Verify user cannot add document without mandatory fields', async () => {
@@ -95,7 +95,6 @@ test('Verify user cannot add document without mandatory fields', async () => {
                 TestUtils.addBug(`Bug: Verify user cannot add document without mandatory fields for document ${document.documentType} failed - ${error.message}`);
             }
     }
-    TestUtils.checkBugs();
 });
 
 test('Verify user can add document with only mandatory fields', async () => {
@@ -114,8 +113,6 @@ test('Verify user can add document with only mandatory fields', async () => {
                 TestUtils.addBug(`Bug: ${document.documentType} could not be found - ${error.message}`);           
             }
     }
-
-    TestUtils.checkBugs();
 });
 
 test('Verify list items have the correct values for all List attributes', async () => {
@@ -139,8 +136,6 @@ test('Verify list items have the correct values for all List attributes', async 
             }
         }   
     }
-
-    TestUtils.checkBugs();
 });
 
 // test('Verify that user cannot add document with future date', async () => {

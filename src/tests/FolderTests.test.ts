@@ -15,7 +15,7 @@ const testClass = new FolderTests();
 
 test.describe('[Folder Specs tests]', () => {
     test.beforeAll(async () => {
-        await testClass.login.launchApplication();
+        await testClass.launchApplication();
         await testClass.login.performLogin(1);
         await testClass.homeSteps.navigateToBrowse();
     });
@@ -24,7 +24,11 @@ test.describe('[Folder Specs tests]', () => {
         TestUtils.clearBugs();
     });
 
-    test('Verify that folder structure is correct (Static folders)', async () => {
+    test.afterEach(() => {
+        TestUtils.checkBugs();
+    });
+
+test('Verify that folder structure is correct (Static folders)', async () => {
     const folders: string[] = testClass.excel.getLowLevelFolders();
     // eslint-disable-next-line no-restricted-syntax
     for (const folderName of folders) {
@@ -37,7 +41,6 @@ test.describe('[Folder Specs tests]', () => {
             }
         });
     }
-    TestUtils.checkBugs();
 });
 
 test('Verify that Documents cannot be added under these folders level directly', async () => {
@@ -71,7 +74,6 @@ test('Verify that Documents cannot be added under these folders level directly',
             });
         }
         }
-    TestUtils.checkBugs();
 });
 
   test.afterAll(async () => {

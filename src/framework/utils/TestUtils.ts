@@ -5,9 +5,11 @@ export default class TestUtils {
         this.warnings.push(warning);
     }
 
-    static checkBugs(): void {
+    static async checkBugs(): Promise<void> {
         if (this.warnings.length > 0) {
-            throw new Error(`Test failed with the following warnings:\n${this.warnings.join('\n')}`);
+            throw new Error(`TEST FAILED - Found ${this.warnings.length} issues:\n${this.warnings.join('\n')}`);
+        } else {
+            console.log("Test Passed"); // Log success message if no errors
         }
     }
 

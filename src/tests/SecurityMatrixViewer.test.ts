@@ -17,13 +17,9 @@ class SecurityMatrixViewer extends TestBase {
 const testClass = new SecurityMatrixViewer();
 
 test.describe('[Security matrix - Viewer]', () => {
-    // test.beforeAll(async () => {
-    //     await testClass.login.launchApplication();
-    // });
-
     test.beforeEach(async () => {
         TestUtils.clearBugs(); // Create a new page
-        await testClass.login.launchApplication();
+        await testClass.launchApplication();
     });
 
     test.afterEach(async () => {
@@ -201,10 +197,11 @@ test.describe('[Security matrix - Viewer]', () => {
         }
     });
 
-    // test.afterAll(async () => {
-    //     await testClass.login.performLogin(0);
-    //     await testClass.homeSteps.navigateToBrowse();
-    //     await testClass.clearFolders();
-    //     await testClass.context.close();
-    // });
+    test.afterAll(async () => {
+        await testClass.launchApplication();
+        await testClass.login.performLogin(0);
+        await testClass.homeSteps.navigateToBrowse();
+        await testClass.clearFolders();
+        await testClass.context.close();
+    });
 });

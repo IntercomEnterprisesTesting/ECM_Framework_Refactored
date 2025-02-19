@@ -18,8 +18,14 @@ class SecurityMatrixMaker extends TestBase {
 const testClass = new SecurityMatrixMaker();   
 
 test.describe('[Security matrix - Maker]', () => {
-    test.beforeAll(async () => {
-        await testClass.login.launchApplication();
+    test.beforeEach(async () => {
+        TestUtils.clearBugs();
+        await testClass.launchApplication();
+    });
+
+    test.afterEach(async () => {
+        await TestUtils.checkBugs(); // Ensure bugs are resolved before closing the page
+        await testClass.context.close(); // Close the page after resolving bugs
     });
 
     test('Verify that maker can add document', async () => {
@@ -36,9 +42,6 @@ test.describe('[Security matrix - Maker]', () => {
                 } catch (error) {
             TestUtils.addBug(`Bug: Failed to add docuemnt ${document.documentType} - ${error.message}`);
         } 
-    
-            await testClass.homeSteps.logOut();
-            TestUtils.checkBugs();
     });
 
     test('Verify that maker can delete document before checker approval', async () => {
@@ -51,13 +54,11 @@ test.describe('[Security matrix - Maker]', () => {
         await testClass.homeSteps.verifyFileAdded(fileName);
         const enabled = await testClass.homeSteps.isDeleteButtonEnabled(fileName);
                 if (!enabled) {
-                    throw new Error(`Bug : Delete button is disabled for ${document.documentType} while it should not be`);
+                    TestUtils.addBug(`Bug : Delete button is disabled for ${document.documentType} while it should not be`);
                 }
             } catch (error) {
         TestUtils.addBug(`Bug: Maker cannot delete docuemnt ${document.documentType} before checker approval - ${error.message}`);
     } 
-         await testClass.homeSteps.logOut();
-         TestUtils.checkBugs();
     });
 
     test('Verify that maker can update document status from rejected to not approved', async () => {
@@ -85,13 +86,11 @@ test.describe('[Security matrix - Maker]', () => {
         const status = await testClass.properties.checkAttrValue("حاله المستند");
         await testClass.properties.clickCancelButton();
         if (status !== newStatus) {
-            throw new Error(`Bug :Expected status to be ${newStatus} but got ${status}`);
+            TestUtils.addBug(`Bug :Expected status to be ${newStatus} but got ${status}`);
         }
             } catch (error) {
         TestUtils.addBug(`Bug: Maker Failed to update docuemnt ${document.documentType} status from rejected to not approved - ${error.message}`);
     } 
-         await testClass.homeSteps.logOut();
-         TestUtils.checkBugs();
         });
 
     test('Verify that maker can update document attributes before checker approval', async () => {
@@ -104,13 +103,11 @@ test.describe('[Security matrix - Maker]', () => {
             await testClass.homeSteps.verifyFileAdded(fileName);
             const editable = await testClass.homeSteps.isDocEditable(fileName);
             if (!editable) {
-                throw new Error(`Document ${document.documentType} is not editable, Edit button is not visible`);
+                TestUtils.addBug(`Document ${document.documentType} is not editable, Edit button is not visible`);
             }
                 } catch (error) {
             TestUtils.addBug(`Bug: Maker Failed to update docuemnt ${document.documentType} attributes before checker approval- ${error.message}`);
         } 
-             await testClass.homeSteps.logOut();
-             TestUtils.checkBugs();
         });
         
     test('Verify that maker can view document attributes after checker approval', async () => {
@@ -132,13 +129,14 @@ test.describe('[Security matrix - Maker]', () => {
     await testClass.homeSteps.navigateToBrowse();
     await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
     await testClass.homeSteps.clickPropertiesButton(fileName);
-    await testClass.attributeUtil.checkAttributesForDocumentType(document);
+    const isValid = testClass.attributeUtil.validateDocAttributes(document);
+        if (!isValid) {
+            TestUtils.addBug(`Bug: ${document.documentType} attributes are not visible`);
+            }
     await testClass.properties.clickCancelButton();
         } catch (error) {
     TestUtils.addBug(`Bug: Failed to view docuemnt ${document.documentType} attributes - ${error.message}`);
 } 
-     await testClass.homeSteps.logOut();
-     TestUtils.checkBugs();
     });
 
     test('Verify that maker can update document version before checker approval', async () => {
@@ -158,8 +156,6 @@ test.describe('[Security matrix - Maker]', () => {
         } catch (error) {
     TestUtils.addBug(`Bug: Maker Failed to update docuemnt ${document.documentType} version before checker approval- ${error.message}`);
 } 
-     await testClass.homeSteps.logOut();
-     TestUtils.checkBugs();
     });
 
     test('Verify that maker can not update document version after checker approval', async () => {
@@ -185,8 +181,6 @@ test.describe('[Security matrix - Maker]', () => {
         } catch (error) {
     TestUtils.addBug(`Bug: Maker can update docuemnt ${document.documentType} version after checker approval- ${error.message}`);
 } 
-     await testClass.homeSteps.logOut();
-     TestUtils.checkBugs();
     });
 
     test('Verify that maker can not update document attributes after checker approval', async () => {
@@ -213,8 +207,6 @@ test.describe('[Security matrix - Maker]', () => {
             } catch (error) {
         TestUtils.addBug(`Bug: Maker can update docuemnt ${document.documentType} attributes after checker approval- ${error.message}`);
     } 
-         await testClass.homeSteps.logOut();
-         TestUtils.checkBugs();
     });
 
     test('Verify that maker can not delete document after checker approval', async () => {
@@ -237,19 +229,18 @@ test.describe('[Security matrix - Maker]', () => {
                 await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
                 const enabled = await testClass.homeSteps.isDeleteButtonEnabled(fileName);
                 if (enabled) {
-                    throw new Error(`Delete button is enabled for ${document.documentType} while it should not be`);
+                    TestUtils.addBug(`Delete button is enabled for ${document.documentType} while it should not be`);
                 }
                 } catch (error) {
             TestUtils.addBug(`Bug: Maker can delete docuemnt ${document.documentType} after checker approval- ${error.message}`);
         } 
-             await testClass.homeSteps.logOut();
-             TestUtils.checkBugs();
     });
 
-//   test.afterAll(async () => {
-//     await testClass.login.performLogin(0);
-//     await testClass.homeSteps.navigateToBrowse();
-//     await testClass.clearFolders();
-//     await testClass.context.close();
-// });
+  test.afterAll(async () => {
+    await testClass.launchApplication();
+    await testClass.login.performLogin(0);
+    await testClass.homeSteps.navigateToBrowse();
+    await testClass.clearFolders();
+    await testClass.context.close();
+});
 });

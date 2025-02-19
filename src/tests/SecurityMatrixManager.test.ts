@@ -17,8 +17,14 @@ class SecurityMatrixManager extends TestBase {
 const testClass = new SecurityMatrixManager();   
 
 test.describe('[Security matrix - Manager]', () => {
-    test.beforeAll(async () => {
-        await testClass.login.launchApplication();
+    test.beforeEach(async () => {
+        TestUtils.clearBugs(); // Create a new page
+        await testClass.launchApplication();
+    });
+
+    test.afterEach(async () => {
+        await TestUtils.checkBugs(); // Ensure bugs are resolved before closing the page
+        await testClass.context.close(); // Close the page after resolving bugs
     });
 
     test('Verify that Manager can not Access Document (Before Checker Approval)', async () => {
@@ -40,8 +46,6 @@ test.describe('[Security matrix - Manager]', () => {
                 } catch (error) {
             TestUtils.addBug(`Bug: Manager can access document ${document.documentType} - ${error.message}`);
         } 
-            await testClass.homeSteps.logOut();
-            TestUtils.checkBugs();
     });
 
     test('Verify that Manager cannot add document', async () => {
@@ -52,13 +56,11 @@ test.describe('[Security matrix - Manager]', () => {
             await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
             const isEnabled = await testClass.homeSteps.checkAddButtonEnabled();
                 if (isEnabled) {
-                    throw new Error(`Bug : Add button is enabled for Manager under document ${document.documentType}`);
+                    TestUtils.addBug(`Bug : Add button is enabled for Manager under document ${document.documentType}`);
                     }
                 } catch (error) {
             TestUtils.addBug(`Bug: Manager can add document ${document.documentType} - ${error.message}`);
         } 
-            await testClass.homeSteps.logOut();
-            TestUtils.checkBugs();
     });
 
     test('Verify that Manager can delete document after checker approval', async () => {
@@ -81,13 +83,11 @@ test.describe('[Security matrix - Manager]', () => {
                 await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
                 const isEnabled = await testClass.homeSteps.isDeleteButtonEnabled(fileName);
                 if (!isEnabled) {
-                    throw new Error(`Delete button is disabled for Manager under document:  ${document.documentType} while it should not be`);
+                    TestUtils.addBug(`Bug : Delete button is disabled for Manager under document:  ${document.documentType} while it should not be`);
                 }
                 } catch (error) {
             TestUtils.addBug(`Bug: Manager can not delete docuemnt ${document.documentType} after checker approval- ${error.message}`);
         } 
-             await testClass.homeSteps.logOut();
-             TestUtils.checkBugs();
     });
 
     test('Verify that Manager can not update document attributes after checker approval', async () => {
@@ -114,8 +114,6 @@ test.describe('[Security matrix - Manager]', () => {
                 } catch (error) {
                 TestUtils.addBug(`Bug: Manager can update docuemnt ${document.documentType} attributes after checker approval- ${error.message}`);
             } 
-                 await testClass.homeSteps.logOut();
-                 TestUtils.checkBugs();
     });
 
     test('Verify that Manager can view document attributes after checker approval', async () => {
@@ -143,10 +141,8 @@ test.describe('[Security matrix - Manager]', () => {
             }
     await testClass.properties.clickCancelButton();
         } catch (error) {
-    TestUtils.addBug(`Bug: Manager Failed to view docuemnt ${document.documentType} attributes - ${error.message}`);
+        TestUtils.addBug(`Bug: Manager Failed to view docuemnt ${document.documentType} attributes - ${error.message}`);
 } 
-     await testClass.homeSteps.logOut();
-     TestUtils.checkBugs();
     });
 
     test('Verify that Manager can not update document version after checker approval', async () => {
@@ -172,14 +168,13 @@ test.describe('[Security matrix - Manager]', () => {
         } catch (error) {
     TestUtils.addBug(`Bug: Manager can update docuemnt ${document.documentType} version after checker approval- ${error.message}`);
 } 
-     await testClass.homeSteps.logOut();
-     TestUtils.checkBugs();
     });
 
-//   test.afterAll(async () => {
-//     await testClass.login.performLogin(0);
-//     await testClass.homeSteps.navigateToBrowse();
-//     await testClass.clearFolders();
-//     await testClass.context.close();
-// });
+  test.afterAll(async () => {
+    await testClass.launchApplication();
+    await testClass.login.performLogin(0);
+    await testClass.homeSteps.navigateToBrowse();
+    await testClass.clearFolders();
+    await testClass.context.close();
+});
 });
