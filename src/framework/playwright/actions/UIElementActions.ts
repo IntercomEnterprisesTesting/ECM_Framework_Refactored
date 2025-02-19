@@ -100,6 +100,19 @@ export default class UIElementActions {
   }
 
   /**
+   * Wait for element to be enabled
+   * @param sec timeout in seconds
+   * @returns 
+   */
+  public async waitForEnabled(sec?: number) {
+    await test.step(`Wait for ${this.description} to be enabled`, async () => {
+      await this.getLocator().waitFor({ state: "attached", timeout: sec ? sec * 1000 : undefined });
+      await this.getLocator().isEnabled();
+    });
+    return this;
+  }
+
+  /**
    * wait for element not to be present in DOM
    * @returns
    */

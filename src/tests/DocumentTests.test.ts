@@ -105,7 +105,7 @@ test('Verify user can add document with only mandatory fields', async () => {
                 await test.step(`trying to add document: ${document.documentType} without mandatory fields`, async () => {
                     await testClass.homeSteps.openAddDoc(document);
                     const fileName = await testClass.addDocument.addDocument(document);
-                    await testClass.homeSteps.verifyFileAdded(fileName);
+                    await testClass.homeSteps.verifyFileVisible(fileName);
                     if (testClass.uiActions.element(AddDocumentPage.ADD_DOCUMENT_WORD, "Add document page").isVisible()) {
                         await testClass.uiActions.keyPress("Escape", "Escape Key");
                     }

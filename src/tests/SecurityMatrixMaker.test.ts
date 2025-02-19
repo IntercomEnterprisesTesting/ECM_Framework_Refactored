@@ -38,7 +38,7 @@ test.describe('[Security matrix - Maker]', () => {
                 if (testClass.uiActions.element(AddDocumentPage.ADD_DOCUMENT_WORD, "Add document page").isVisible()) {
                     await testClass.uiActions.keyPress("Escape", "Escape Key");
                     }
-            await testClass.homeSteps.verifyFileAdded(fileName);
+            await testClass.homeSteps.verifyFileVisible(fileName);
                 } catch (error) {
             TestUtils.addBug(`Bug: Failed to add docuemnt ${document.documentType} - ${error.message}`);
         } 
@@ -51,7 +51,7 @@ test.describe('[Security matrix - Maker]', () => {
                 try {
         await testClass.homeSteps.openAddDoc(document);
         const fileName = await testClass.addDocument.addDocument(document);
-        await testClass.homeSteps.verifyFileAdded(fileName);
+        await testClass.homeSteps.verifyFileVisible(fileName);
         const enabled = await testClass.homeSteps.isDeleteButtonEnabled(fileName);
                 if (!enabled) {
                     TestUtils.addBug(`Bug : Delete button is disabled for ${document.documentType} while it should not be`);
@@ -68,7 +68,7 @@ test.describe('[Security matrix - Maker]', () => {
         await testClass.homeSteps.navigateToBrowse();
         await testClass.homeSteps.openAddDoc(document);
         const fileName = await testClass.addDocument.addDocument(document);
-        await testClass.homeSteps.verifyFileAdded(fileName);
+        await testClass.homeSteps.verifyFileVisible(fileName);
         await testClass.homeSteps.logOut();
         await testClass.login.performLogin(2);
         await testClass.homeSteps.navigateToBrowse();
@@ -100,7 +100,7 @@ test.describe('[Security matrix - Maker]', () => {
                     try {
             await testClass.homeSteps.openAddDoc(document);
             const fileName = await testClass.addDocument.addDocument(document);
-            await testClass.homeSteps.verifyFileAdded(fileName);
+            await testClass.homeSteps.verifyFileVisible(fileName);
             const editable = await testClass.homeSteps.isDocEditable(fileName);
             if (!editable) {
                 TestUtils.addBug(`Document ${document.documentType} is not editable, Edit button is not visible`);
@@ -117,7 +117,7 @@ test.describe('[Security matrix - Maker]', () => {
     await testClass.homeSteps.navigateToBrowse();
     await testClass.homeSteps.openAddDoc(document);
     const fileName = await testClass.addDocument.addDocument(document);
-    await testClass.homeSteps.verifyFileAdded(fileName);
+    await testClass.homeSteps.verifyFileVisible(fileName);
     await testClass.homeSteps.logOut();
     await testClass.login.performLogin(2);
     await testClass.homeSteps.navigateToBrowse();
@@ -146,7 +146,7 @@ test.describe('[Security matrix - Maker]', () => {
             try {
     await testClass.homeSteps.openAddDoc(document);
     const fileName = await testClass.addDocument.addDocument(document);
-    await testClass.homeSteps.verifyFileAdded(fileName);
+    await testClass.homeSteps.verifyFileVisible(fileName);
     await testClass.homeSteps.checkOutFile(fileName);
     await testClass.homeSteps.checkInFile(fileName);
     await testClass.checkIn.checkInfile();
@@ -165,7 +165,7 @@ test.describe('[Security matrix - Maker]', () => {
         await testClass.homeSteps.navigateToBrowse();
         await testClass.homeSteps.openAddDoc(document);
         const fileName = await testClass.addDocument.addDocument(document);
-        await testClass.homeSteps.verifyFileAdded(fileName);
+        await testClass.homeSteps.verifyFileVisible(fileName);
         await testClass.homeSteps.logOut();
         await testClass.login.performLogin(2);
         await testClass.homeSteps.navigateToBrowse();
@@ -190,7 +190,7 @@ test.describe('[Security matrix - Maker]', () => {
             await testClass.homeSteps.navigateToBrowse();
             await testClass.homeSteps.openAddDoc(document);
             const fileName = await testClass.addDocument.addDocument(document);
-            await testClass.homeSteps.verifyFileAdded(fileName);
+            await testClass.homeSteps.verifyFileVisible(fileName);
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(2);
             await testClass.homeSteps.navigateToBrowse();
@@ -216,7 +216,7 @@ test.describe('[Security matrix - Maker]', () => {
                 await testClass.homeSteps.navigateToBrowse();
                 await testClass.homeSteps.openAddDoc(document);
                 const fileName = await testClass.addDocument.addDocument(document);
-                await testClass.homeSteps.verifyFileAdded(fileName);
+                await testClass.homeSteps.verifyFileVisible(fileName);
                 await testClass.homeSteps.logOut();
                 await testClass.login.performLogin(2);
                 await testClass.homeSteps.navigateToBrowse();

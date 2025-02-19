@@ -34,7 +34,7 @@ test.describe('[Security matrix - Viewer]', () => {
             await testClass.homeSteps.navigateToBrowse();
             await testClass.homeSteps.openAddDoc(document);
             const fileName = await testClass.addDocument.addDocument(document);
-            await testClass.homeSteps.verifyFileAdded(fileName);
+            await testClass.homeSteps.verifyFileVisible(fileName);
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(4);
             await testClass.homeSteps.navigateToBrowse();
@@ -70,7 +70,7 @@ test.describe('[Security matrix - Viewer]', () => {
         try {
             await testClass.homeSteps.openAddDoc(document);
             const fileName = await testClass.addDocument.addDocument(document);
-            await testClass.homeSteps.verifyFileAdded(fileName);
+            await testClass.homeSteps.verifyFileVisible(fileName);
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(2);
             await testClass.homeSteps.navigateToBrowse();
@@ -97,7 +97,7 @@ test.describe('[Security matrix - Viewer]', () => {
             await testClass.homeSteps.navigateToBrowse();
             await testClass.homeSteps.openAddDoc(document);
             const fileName = await testClass.addDocument.addDocument(document);
-            await testClass.homeSteps.verifyFileAdded(fileName);
+            await testClass.homeSteps.verifyFileVisible(fileName);
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(2);
             await testClass.homeSteps.navigateToBrowse();
@@ -124,7 +124,7 @@ test.describe('[Security matrix - Viewer]', () => {
             await testClass.homeSteps.navigateToBrowse();
             await testClass.homeSteps.openAddDoc(document);
             const fileName = await testClass.addDocument.addDocument(document);
-            await testClass.homeSteps.verifyFileAdded(fileName);
+            await testClass.homeSteps.verifyFileVisible(fileName);
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(2);
             await testClass.homeSteps.navigateToBrowse();
@@ -150,7 +150,7 @@ test.describe('[Security matrix - Viewer]', () => {
             await testClass.homeSteps.navigateToBrowse();
             await testClass.homeSteps.openAddDoc(document);
             const fileName = await testClass.addDocument.addDocument(document);
-            await testClass.homeSteps.verifyFileAdded(fileName);
+            await testClass.homeSteps.verifyFileVisible(fileName);
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(2);
             await testClass.homeSteps.navigateToBrowse();
@@ -179,7 +179,7 @@ test.describe('[Security matrix - Viewer]', () => {
             await testClass.homeSteps.navigateToBrowse();
             await testClass.homeSteps.openAddDoc(document);
             const fileName = await testClass.addDocument.addDocument(document);
-            await testClass.homeSteps.verifyFileAdded(fileName);
+            await testClass.homeSteps.verifyFileVisible(fileName);
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(2);
             await testClass.homeSteps.navigateToBrowse();
