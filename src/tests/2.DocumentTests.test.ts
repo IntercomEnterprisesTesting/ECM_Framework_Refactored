@@ -36,7 +36,7 @@ test('Verify all documents have the correct attributes', async () => {
                 try {
                     await test.step(`checking attributes for document: ${document.documentType}`, async () => {
                         await testClass.homeSteps.openAddDoc(document);
-                        await testClass.addDocument.fillMandatoryAttributes(document);
+                        // await testClass.addDocument.fillMandatoryAttributes(document);
                         const isValid = await testClass.attributeUtil.validateDocAttributes(document);
                         await testClass.uiActions.keyPress("Escape", `Exiting document : ${document.documentType}`);
                     if (!isValid) {
@@ -77,7 +77,7 @@ test('Verify all documents max length attributes are correct', async () => {
                 TestUtils.addBug(`Bug: Verify all documents max length fields are correct for document ${document.documentType} failed - ${error.message}`);
             }
     }
-});
+    });
 
 test('Verify user cannot add document without mandatory fields', async () => {
     const documents: DocumentClass[] = testClass.excel.getAllDocumentTypes();
@@ -94,7 +94,7 @@ test('Verify user cannot add document without mandatory fields', async () => {
                 TestUtils.addBug(`Bug: Verify user cannot add document without mandatory fields for document ${document.documentType} failed - ${error.message}`);
             }
     }
-});
+    });
 
 test('Verify user can add document with only mandatory fields', async () => {
     const documents: DocumentClass[] = testClass.excel.getAllDocumentTypes();
@@ -112,7 +112,7 @@ test('Verify user can add document with only mandatory fields', async () => {
                 TestUtils.addBug(`Bug: document : ${document.documentType} was not added successfully - ${error.message}`);           
             }
     }
-});
+    });
 
 test('Verify list items have the correct values for all List attributes', async () => {
     const documents: DocumentClass[] = testClass.excel.getAllDocumentTypes();
@@ -135,7 +135,7 @@ test('Verify list items have the correct values for all List attributes', async 
             }
         }   
     }
-});
+    });
 
 // test('Verify that user cannot add document with future date', async () => {
 //     const documents: DocumentClass[] = testClass.excel.getAllDocumentTypes();

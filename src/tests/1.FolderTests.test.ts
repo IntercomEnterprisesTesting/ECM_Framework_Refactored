@@ -14,18 +14,16 @@ class FolderTests extends TestBase {
 const testClass = new FolderTests();
 
 test.describe('[Folder Specs tests]', () => {
-    test.beforeAll(async () => {
+    test.beforeEach(async () => {
+        TestUtils.clearBugs();
         await testClass.launchApplication();
         await testClass.login.performLogin(1);
         await testClass.homeSteps.navigateToBrowse();
     });
 
-    test.beforeEach(() => {
-        TestUtils.clearBugs();
-    });
-
-    test.afterEach(() => {
-        TestUtils.checkBugs();
+    test.afterEach(async () => {
+        await TestUtils.checkBugs(); // Ensure bugs are resolved before closing the page
+        await testClass.context.close(); // Close the page after resolving bugs
     });
 
 test('Verify that folder structure is correct (Static folders)', async () => {

@@ -25,8 +25,9 @@ export default class CheckInPageSteps {
         await this.uiActions.element(CheckInPage.UPLOAD_FILE_BTN, "Upload file button").click();
     }
 
-    public async checkInfile() {
+    public async UploadAndcheckInfile() {
         await this.uiActions.element(CheckInPage.FILE_INPUT, "File input").setInputFiles(TestConstants.TEST_FILE_PATH);
+        await this.uiActions.element(CheckInPage.CHECK_IN_BTN, "Check in button").waitTillVisible(5);
         await this.uiActions.element(CheckInPage.CHECK_IN_BTN, "Check in button").click();
         } 
 }

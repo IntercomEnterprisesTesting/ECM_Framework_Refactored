@@ -1,5 +1,4 @@
 /* eslint-disable max-len */
-import Assert from "@asserts/Assert";
 import HomePage from "@pages/HomePage";
 import UIActions from "@uiActions/UIActions";
 import FolderNavigationUtil from "@utils/FolderNavigationUtil";
@@ -22,11 +21,14 @@ export default class HomePageSteps {
     private async waitForHomePageLoad() {
         await this.uiActions.waitForDomContentLoaded();
         // Wait for a specific element to be visible that indicates the page has fully loaded
-        await this.uiActions.element(HomePage.FAVOURITES_BUTTON, "Home Page").isEnabled();
+        await this.uiActions.element(HomePage.FAVOURITES_BUTTON, "Home Page").waitTillVisible(5);
+        await this.uiActions.element(HomePage.FAVOURITES_BUTTON, "Home Page").waitForEnabled(5);
     }
 
     private async clickSideMenuButton() {
+        await this.waitForHomePageLoad();
         await this.uiActions.element(HomePage.FEATURES_MENU, "Features Menu Button").waitTillVisible(5);
+        await this.uiActions.element(HomePage.SIDE_MENU_BUTTON, "Side Menu Button").waitForEnabled();
         await this.uiActions.element(HomePage.SIDE_MENU_BUTTON, "Side Menu Button").click();
         await this.verifyMenuIsOpened();
     }
@@ -42,6 +44,10 @@ export default class HomePageSteps {
 
     private async verifyMenuIsOpened() {
         await this.uiActions.element(HomePage.OPENED_SIDE_MENU, "Opened Side Menu").waitTillVisible(5);
+        const menuIsOpened = await this.uiActions.element(HomePage.OPENED_SIDE_MENU, "Opened side menu").isVisible(5);
+        if (!menuIsOpened) {
+            await this.clickSideMenuButton();
+        }
     }
 
     public async verifyFileVisible(fileName : string) {
@@ -98,13 +104,15 @@ export default class HomePageSteps {
         await this.openActionMenu(fileName);
         await this.uiActions.element(HomePage.CHECK_OUT_BUTTON, "Check Out Button").hover();
         await this.uiActions.element(HomePage.CHECK_OUT_ONLY_BUTTON, "Check Out Button").click();
-        await this.uiActions.element(HomePage.CHECK_OUT_IMG, "Check Out Button").isVisible();
+        await this.uiActions.element(HomePage.CHECK_OUT_IMG, "Check Out Img").isVisible();
+        await this.uiActions.waitForDomContentLoaded();
     } 
 
     public async checkInFile(fileName: string) {
         const fileLinkLocator = LinkUtil.getLinkSelector(fileName);
         await this.uiActions.element(fileLinkLocator, `Link for ${fileName}`).rightClick();
         await this.uiActions.element(HomePage.CHECK_IN_BUTTON, "Check In Button").click();
+        await this.uiActions.waitForDomContentLoaded();
         // return new checkInPage(this.page);
     }
 
@@ -112,17 +120,11 @@ export default class HomePageSteps {
         await this.waitForHomePageLoad();
         await this.clickSideMenuButton();
         await this.uiActions.element(HomePage.SIDE_MENU_LOADED, "Browse Button").waitTillVisible(5);
-        await this.uiActions.waitForDomContentLoaded();
-        const menuIsOpened = await this.uiActions.element(HomePage.OPENED_SIDE_MENU, "Opened side menu").isVisible(5);
-        if (!menuIsOpened) {
-            await this.clickSideMenuButton();
-        }
+        // await this.uiActions.waitForDomContentLoaded();
         await this.verifyMenuIsOpened();
-        await this.uiActions.waitForDomContentLoaded();
-        // Wait for the side menu button to be visible
-        // Click the side menu button
+        // await this.uiActions.waitForDomContentLoaded();
         await this.clickBrowseButton();
-        await this.uiActions.waitForDomContentLoaded();
+        // await this.uiActions.waitForDomContentLoaded();
         // Click the browse button
     }
 

@@ -59,7 +59,7 @@ export default class AddDocumentPageSteps {
             await this.uiActions.editBox(AddDocumentPage.ENTRY_TEMPLATE_INPUT, "Entry template").fill(entryTemplate);
             await this.uiActions.keyPress("Enter", "Enter Key");
             await this.uiActions.waitForDomContentLoaded();
-            await this.uiActions.element(AddDocumentPage.ATTRIBUTES_DIV, "Attributes div").isVisible(5);
+            await this.uiActions.element(AddDocumentPage.ATTRIBUTES_DIV, "Attributes div").waitTillVisible(5);
            }
         }
     private async fillTextBoxAttribute(attribute: string, value: string) {

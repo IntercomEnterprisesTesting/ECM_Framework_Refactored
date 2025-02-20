@@ -5,6 +5,7 @@ import UIActions from "@uiActions/UIActions";
 import LoginPage from "../pages/LoginPage";
 // eslint-disable-next-line import/order
 import UsersReader from "Excel/usersReader";
+import HomePageSteps from "./HomePageSteps";
 
 export default class LoginPageSteps {
     private uiActions: UIActions;
@@ -43,6 +44,7 @@ public async performLogin(user: number) {
         await this.uiActions.editBox(LoginPage.USER_NAME_TEXTBOX, "userName").fill(userName);
         await this.uiActions.editBox(LoginPage.PASSWORD_TEXTBOX, "password").fill(password);
         await this.uiActions.element(LoginPage.LOGIN_BUTTON, "login button").click();
+        await this.page.waitForTimeout(500);
     });
 }
 }

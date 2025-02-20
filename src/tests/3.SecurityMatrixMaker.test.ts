@@ -149,7 +149,7 @@ test.describe('[Security matrix - Maker]', () => {
     await testClass.homeSteps.verifyFileVisible(fileName);
     await testClass.homeSteps.checkOutFile(fileName);
     await testClass.homeSteps.checkInFile(fileName);
-    await testClass.checkIn.checkInfile();
+    await testClass.checkIn.UploadAndcheckInfile();
     await testClass.homeSteps.clickPropertiesButton(fileName);
     await testClass.properties.verifyDocumentVersion();
     await testClass.properties.clickCancelButton();

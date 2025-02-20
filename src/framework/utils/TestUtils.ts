@@ -7,7 +7,7 @@ export default class TestUtils {
 
     static async checkBugs(): Promise<void> {
         if (this.warnings.length > 0) {
-            throw new Error(`TEST FAILED - Found ${this.warnings.length} issues:\n${this.warnings.join('\n')}`);
+            throw new Error(`TEST FAILED - Found the following issues:\n${this.warnings.join('\n')}`);
         } else {
             console.log("Test Passed"); // Log success message if no errors
         }

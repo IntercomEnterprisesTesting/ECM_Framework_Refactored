@@ -1,5 +1,4 @@
 import TestConstants from "@uiConstants/TestConstants";
-
 /* eslint-disable max-len */
 export default class HomePage {    
     static readonly FEATURES_MENU = '//div[@aria-label="Features menu"]';
