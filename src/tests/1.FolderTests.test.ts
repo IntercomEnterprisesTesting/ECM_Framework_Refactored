@@ -22,8 +22,8 @@ test.describe('[Folder Specs tests]', () => {
     });
 
     test.afterEach(async () => {
-        await TestUtils.checkBugs(); // Ensure bugs are resolved before closing the page
         await testClass.context.close(); // Close the page after resolving bugs
+        await TestUtils.checkBugs(); // Ensure bugs are resolved before closing the page
     });
 
 test('Verify that folder structure is correct (Static folders)', async () => {

@@ -360,4 +360,39 @@ export default class UIElementActions {
     });
     return this;
   }
+
+  /**
+   * Wait for element to be visible in viewport
+   * @returns Promise<void>
+   */
+  public async waitForVisibleInViewport() {
+    await test.step(`Waiting for ${this.description} to be visible in viewport`, async () => {
+      const element = this.getLocator();
+      await element.waitFor({ state: 'visible' });
+      const isInViewport = await element.evaluate((el) => {
+        const rect = el.getBoundingClientRect();
+        return (
+          rect.top >= 0
+          && rect.left >= 0
+          && rect.bottom <= window.innerHeight
+          && rect.right <= window.innerWidth
+        );
+      });
+      if (!isInViewport) {
+        await element.scrollIntoViewIfNeeded();
+      }
+    });
+    return this;
+  }
+
+  /**
+   * Focus on the element
+   * @returns
+   */
+  public async focus() {
+    await test.step(`Focusing on ${this.description}`, async () => {
+      await this.getLocator().focus();
+    });
+    return this;
+  }
 }

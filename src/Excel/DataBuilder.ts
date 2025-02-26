@@ -242,6 +242,19 @@ export default class DataBuilder {
     return documentTypes;
   }
 
+  // Method to get all document types with list attributes
+  public getAllDocumentTypesWithListAttributes(): DocumentClass[] {
+    const documentTypes: DocumentClass[] = [];
+    this.foldersMap.forEach((folder) => {
+      folder.documents.forEach((doc) => {
+        if (doc.attributes.some((attr) => attr.attributeType === 'List')) {
+          documentTypes.push(doc);
+        }
+      });
+    });
+    return documentTypes;
+  }
+
   // Method to check if a document type has an entry template
   public hasEntryTemplate(documentType: string): string {
     const document = Array.from(this.foldersMap.values())
@@ -290,5 +303,12 @@ export default class DataBuilder {
     return Array.from(this.foldersMap.values())
       .filter((folder) => folder.canAdd)
       .map((folder) => folder.name);
+  }
+
+  public getAttributeByName(attributeName: string): Attribute | undefined {
+    return Array.from(this.foldersMap.values())
+      .flatMap((folder) => folder.documents)
+      .flatMap((doc) => doc.attributes)
+      .find((attr) => attr.attributeName === attributeName);
   }
 }

@@ -31,6 +31,7 @@ export default class AccountServiceSteps {
     public async verifyResponseContains(response: SOAPResponse, xpath: string, result: string, operation: string) {
         await test.step(`Verifying that result of ${operation} contains ${result}`, async () => {
             const actualResult = await response.getTagContentByXpath(xpath, operation);
+            console.log(`Actual result: ${actualResult}`);
             await Assert.assertContains(actualResult, result, operation);
         });
     }

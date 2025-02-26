@@ -23,8 +23,8 @@ test.describe('[Search Template]', () => {
     });
 
     test.afterEach(async () => {
-        await TestUtils.checkBugs(); // Ensure bugs are resolved before closing the page
         await testClass.context.close(); // Close the page after resolving bugs
+        await TestUtils.checkBugs(); // Ensure bugs are resolved before closing the page
     });
 
     test('Verify that maker can view document in search template before checker approval', async () => {
@@ -87,7 +87,7 @@ test.describe('[Search Template]', () => {
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(2);
             await testClass.homeSteps.navigateToBrowse();
-            await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+            await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
             await testClass.homeSteps.clickPropertiesButton(fileName);
             await testClass.properties.updateAttrAndSave(PropertiesPage.DOCUMENT_STATUS, "Approved");
             await testClass.homeSteps.logOut();
@@ -135,7 +135,7 @@ test.describe('[Search Template]', () => {
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(2);
             await testClass.homeSteps.navigateToBrowse();
-            await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+            await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
             await testClass.homeSteps.clickPropertiesButton(fileName);
             await testClass.properties.updateAttrAndSave(PropertiesPage.DOCUMENT_STATUS, "Approved");
             await testClass.homeSteps.logOut();
@@ -187,7 +187,7 @@ test.describe('[Search Template]', () => {
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(2);
             await testClass.homeSteps.navigateToBrowse();
-            await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+            await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
             await testClass.homeSteps.clickPropertiesButton(fileName);
             await testClass.properties.updateAttrAndSave(PropertiesPage.DOCUMENT_STATUS, "Approved");
             await testClass.homeSteps.logOut();
@@ -238,13 +238,13 @@ test.describe('[Search Template]', () => {
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(2);
             await testClass.homeSteps.navigateToBrowse();
-            await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+            await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
             await testClass.homeSteps.clickPropertiesButton(fileName);
             await testClass.properties.updateAttrAndSave(PropertiesPage.DOCUMENT_STATUS, "Approved");
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(3);
             await testClass.homeSteps.navigateToBrowse();
-            await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+            await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
             await testClass.homeSteps.deleteFile(fileName);
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(4);
@@ -273,7 +273,7 @@ test.describe('[Search Template]', () => {
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(2);
             await testClass.homeSteps.navigateToBrowse();
-            await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+            await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
             await testClass.homeSteps.clickPropertiesButton(fileName);
             await testClass.properties.updateAttrAndSave(PropertiesPage.DOCUMENT_STATUS, "Approved");
             await testClass.homeSteps.logOut();
@@ -324,13 +324,13 @@ test.describe('[Search Template]', () => {
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(2);
             await testClass.homeSteps.navigateToBrowse();
-            await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+            await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
             await testClass.homeSteps.clickPropertiesButton(fileName);
             await testClass.properties.updateAttrAndSave(PropertiesPage.DOCUMENT_STATUS, "Approved");
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(3);
             await testClass.homeSteps.navigateToBrowse();
-            await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+            await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
             await testClass.homeSteps.deleteFile(fileName);
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(3);

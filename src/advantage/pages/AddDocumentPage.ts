@@ -9,6 +9,6 @@ export default class AddDocumentPage {
     static readonly MANDATORY_FIELD_ERROR_MESSAGE_LOCATOR = `//div[@role="presentation" and text() = ${this.MANDATORY_FIELD_ERROR_MESSAGE}]`;
     static readonly ENTRY_TEMPLATE_INPUT = '//input[contains(@id,"entryTemplateSelector")]';
     static readonly CANCEL_BUTTON = '//span[@role="button" and contains(@id,"CANCEL_ecm_widget_dialog_AddContentItemDialog")]';
-    static readonly ATTRIBUTES_DIV = '//div[@class="documentClassDiv"]';
+    static readonly ATTRIBUTES_DIV = '//div[contains(@id,"ecm_widget_LayoutPropertiesPane")]';
     static readonly ADD_DOCUMENT_WORD = '//span[@data-dojo-attach-point= "titleNode" and text() = "Add Document"]';
 }

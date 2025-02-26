@@ -58,6 +58,13 @@ export default class AddDocumentPageSteps {
            if (entryTemplate) {
             await this.uiActions.editBox(AddDocumentPage.ENTRY_TEMPLATE_INPUT, "Entry template").fill(entryTemplate);
             await this.uiActions.keyPress("Enter", "Enter Key");
+            await this.uiActions.pauseInSecs(1);
+            await this.uiActions.waitForDomContentLoaded();
+            const isVisible = await this.uiActions.element(AddDocumentPage.ATTRIBUTES_DIV, "Attributes div").isVisible(5);
+            if (!isVisible) {
+                await this.uiActions.element(AddDocumentPage.CANCEL_BUTTON, "Cancel button").click();
+                TestUtils.addBug(`Entry template was not selected for ${documenName}`);
+            }
             await this.uiActions.waitForDomContentLoaded();
             await this.uiActions.element(AddDocumentPage.ATTRIBUTES_DIV, "Attributes div").waitTillVisible(5);
            }
@@ -68,15 +75,14 @@ export default class AddDocumentPageSteps {
         }
     public async fillMandatoryAttributes(documentClass:DocumentClass) : Promise<string> {
         const mandatoryAttributes = this.excel.getMandatoryAttributes(documentClass.documentType);
-        const entryTemplate = this.excel.hasEntryTemplate(documentClass.documentType);
+        // const entryTemplate = this.excel.hasEntryTemplate(documentClass.documentType);
         const documentName = StringUtil.generateTestDocumentName();
         // Check if documentType has an entry template attribute
-        if (entryTemplate) {          
-                await this.selectEntryTemplate(entryTemplate);         
-        }
+        // if (entryTemplate) {          
+        //         await this.selectEntryTemplate(entryTemplate);         
+        // }
         for (const attribute of mandatoryAttributes) {
-            const attr = await this.attributeUtil.createAttributeInputSelector(attribute.attributeName);
-            await this.uiActions.editBox(attr, attribute.attributeName).fill(attribute.defaultValue);
+            await this.attributeUtil.fillAttribute(attribute);
         }
         await this.uiActions.editBox(await this.attributeUtil.createAttributeInputSelector("Document Title"), "document title").fill(documentName);
         return documentName;
@@ -84,16 +90,15 @@ export default class AddDocumentPageSteps {
 
     public async fillNonMandatoryAttributes(documentClass:DocumentClass) : Promise<string> {
         const nonMandatoryAttributes = this.excel.getNonMandatoryAttributeNamesByDocumentClass(documentClass);
-        const entryTemplate = this.excel.hasEntryTemplate(documentClass.documentType);
+        // const entryTemplate = this.excel.hasEntryTemplate(documentClass.documentType);
         const documentName = StringUtil.generateTestDocumentName();
         
         // Check if documentType has an entry template attribute
-        if (entryTemplate) {          
-                await this.selectEntryTemplate(entryTemplate);         
-        }
+        // if (entryTemplate) {          
+        //         await this.selectEntryTemplate(entryTemplate);         
+        // }
         for (const attribute of nonMandatoryAttributes) {
-            const attr = await this.attributeUtil.createAttributeInputSelector(attribute.attributeName);
-            await this.uiActions.editBox(attr, attribute.attributeName).fill(attribute.defaultValue);
+           await this.attributeUtil.fillAttribute(attribute);
         }
         await this.uiActions.editBox(await this.attributeUtil.createAttributeInputSelector("Document Title"), "document title").fill(documentName);
         return documentName;
@@ -118,7 +123,7 @@ export default class AddDocumentPageSteps {
         await this.setUploadFilePath();
         const documentName = await this.fillNonMandatoryAttributes(documentType);
         await this.clickAddButton();
-        await this.clickAddButton();
+        // await this.clickAddButton();
         return documentName;
     }
 

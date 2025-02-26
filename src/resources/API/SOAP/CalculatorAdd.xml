@@ -1,0 +1,11 @@
+<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:int="http://intercom.eg">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <int:deleteSRFolder>
+         <username>{userName}</username>
+         <password>{password}</password>
+         <objectStore>{objectStore}</objectStore>
+         <srNumber>adsa</srNumber>
+      </int:deleteSRFolder>
+   </soapenv:Body>
+</soapenv:Envelope>

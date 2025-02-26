@@ -24,8 +24,8 @@ test.describe('[Security matrix - Maker]', () => {
     });
 
     test.afterEach(async () => {
-        await TestUtils.checkBugs(); // Ensure bugs are resolved before closing the page
         await testClass.context.close(); // Close the page after resolving bugs
+        await TestUtils.checkBugs(); // Ensure bugs are resolved before closing the page
     });
 
     test('Verify that maker can add document', async () => {
@@ -72,13 +72,13 @@ test.describe('[Security matrix - Maker]', () => {
         await testClass.homeSteps.logOut();
         await testClass.login.performLogin(2);
         await testClass.homeSteps.navigateToBrowse();
-        await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+        await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
         await testClass.homeSteps.clickPropertiesButton(fileName);
         await testClass.properties.updateAttrAndSave(PropertiesPage.DOCUMENT_STATUS, "Rejected");
         await testClass.homeSteps.logOut();
         await testClass.login.performLogin(1);
         await testClass.homeSteps.navigateToBrowse();
-        await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+        await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
         await testClass.homeSteps.clickPropertiesButton(fileName);
         const newStatus = "Not Approved";
         await testClass.properties.updateAttrAndSave(PropertiesPage.DOCUMENT_STATUS, newStatus);
@@ -121,13 +121,13 @@ test.describe('[Security matrix - Maker]', () => {
     await testClass.homeSteps.logOut();
     await testClass.login.performLogin(2);
     await testClass.homeSteps.navigateToBrowse();
-    await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+    await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
     await testClass.homeSteps.clickPropertiesButton(fileName);
     await testClass.properties.updateAttrAndSave(PropertiesPage.DOCUMENT_STATUS, "Approved");
     await testClass.homeSteps.logOut();
     await testClass.login.performLogin(1);
     await testClass.homeSteps.navigateToBrowse();
-    await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+    await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
     await testClass.homeSteps.clickPropertiesButton(fileName);
     const isValid = testClass.attributeUtil.validateDocAttributes(document);
         if (!isValid) {
@@ -169,13 +169,13 @@ test.describe('[Security matrix - Maker]', () => {
         await testClass.homeSteps.logOut();
         await testClass.login.performLogin(2);
         await testClass.homeSteps.navigateToBrowse();
-        await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+        await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
         await testClass.homeSteps.clickPropertiesButton(fileName);
         await testClass.properties.updateAttrAndSave(PropertiesPage.DOCUMENT_STATUS, "Approved");
         await testClass.homeSteps.logOut();
         await testClass.login.performLogin(1);
         await testClass.homeSteps.navigateToBrowse();
-        await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+        await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
         await testClass.homeSteps.openActionMenu(fileName);
         await testClass.uiActions.element(HomePage.CHECK_OUT_BUTTON, "Check Out Button").isDisabled();
         } catch (error) {
@@ -194,13 +194,13 @@ test.describe('[Security matrix - Maker]', () => {
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(2);
             await testClass.homeSteps.navigateToBrowse();
-            await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+            await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
             await testClass.homeSteps.clickPropertiesButton(fileName);
             await testClass.properties.updateAttrAndSave(PropertiesPage.DOCUMENT_STATUS, "Approved");
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(1);
             await testClass.homeSteps.navigateToBrowse();
-            await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+            await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
             await testClass.homeSteps.clickPropertiesButton(fileName);
             await testClass.attributeUtil.checkAttrAreDisabledForDocClass(document);
             await testClass.properties.clickCancelButton();
@@ -220,13 +220,13 @@ test.describe('[Security matrix - Maker]', () => {
                 await testClass.homeSteps.logOut();
                 await testClass.login.performLogin(2);
                 await testClass.homeSteps.navigateToBrowse();
-                await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+                await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
                 await testClass.homeSteps.clickPropertiesButton(fileName);
                 await testClass.properties.updateAttrAndSave(PropertiesPage.DOCUMENT_STATUS, "Approved");
                 await testClass.homeSteps.logOut();
                 await testClass.login.performLogin(1);
                 await testClass.homeSteps.navigateToBrowse();
-                await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+                await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
                 const enabled = await testClass.homeSteps.isDeleteButtonEnabled(fileName);
                 if (enabled) {
                     TestUtils.addBug(`Delete button is enabled for ${document.documentType} while it should not be`);

@@ -6,3 +6,5 @@ node_modules
 /.vscode
 src/resources/data/~$Project.xlsx
 src/resources/data/~$users.xlsx
+src/resources/data/~$testData.xlsx
+src/resources/data/~$ConsolidatedFinancialStatements.xlsx

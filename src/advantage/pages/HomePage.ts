@@ -1,6 +1,6 @@
 import TestConstants from "@uiConstants/TestConstants";
 /* eslint-disable max-len */
-export default class HomePage {    
+export default class HomePage {
     static readonly FEATURES_MENU = '//div[@aria-label="Features menu"]';
     static readonly FAVOURITES_BUTTON = '//div[@role="tree" and @aria-label="Favorites Tree"]';
     static readonly OPENED_SIDE_MENU = '//nav[@class="featureListPane"]';

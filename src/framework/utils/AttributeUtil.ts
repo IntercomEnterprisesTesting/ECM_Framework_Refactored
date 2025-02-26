@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-restricted-syntax */
 import { Locator, Page } from "@playwright/test";
 import UIActions from "@uiActions/UIActions";
@@ -109,10 +110,15 @@ export default class AttributeUtil {
     }
 
   private async isAttributeMandatory(attributeName: string): Promise<boolean> {
+    // Check if the original locator is visible
+    // const isVisible = await this.isAttributeVisible(attributeName);
+    // if (!isVisible) {
+    //   throw new Error(`Attribute ${attributeName} is not visible on the page`);
+    // }
     const originalSelector = this.getAttributeSelector(attributeName);
     const selectorMainDiv = `${originalSelector}/ancestor::div[contains(@class, 'pvrProperty')]`;
-    const originalLocator = this.createLocatorFromAttributeSelector(selectorMainDiv);
-    const classValue = await this.getAttribueFromElement(originalLocator, "class");
+    const mainDivLocator = this.createLocatorFromAttributeSelector(selectorMainDiv);
+    const classValue = await this.getAttribueFromElement(mainDivLocator, "class");
     const isMandatory = classValue?.includes('pvrPropertyRequired') || false;
     return isMandatory;
   }
@@ -261,30 +267,36 @@ private async getListLocatorsByID(id:string): Promise<string[]> {
   return locatorTexts; 
 }
 
-public async extractActualListItemsForAttribute(attributeName: string): Promise<string[]> {
+public async extractActualListItemsForAttribute(attribute: Attribute): Promise<string[]> {
   let allTexts: string[] = []; // Array to collect texts from the list items
 
   try {
-    // Create the locator based on the attribute label (XPath example)
-    const attrInputLoc = await this.createAttributeInputLocator(attributeName);
-    // Extract the ID from the activated attribute locator
+    // If attribute has a dependent value, fill it first
+    if (attribute.dependant) {
+      const dependentAttr = this.dataBuilder.getAttributeByName(attribute.dependant);
+        await this.fillListItem(dependentAttr, dependentAttr.defaultValue);
+    }
+
+    // Create the locator based on the attribute label
+    const attrInputLoc = await this.createAttributeInputLocator(attribute.attributeName);
     const id = await this.getAttribueFromElement(attrInputLoc, "id");
     const arrowSelector = await this.getListArrowSelector(id);
+    
     try {
-      await this.uiActions.element(arrowSelector, `Arrow button for ${attributeName} list`).click();
+      await this.uiActions.element(arrowSelector, `Arrow button for ${attribute} list`).click();
     } catch (error) {
       console.log(error);
     }
-      // Get the list locators and count how many elements are present
-      const innerText = await this.getListLocatorsByID(id);
-     allTexts = StringUtil.filterArray(innerText);
-      // Loop over each list item and collect the text content
-  // Ignore the first and last elements if there are more than 2 items 
-} catch (error) {
-  console.error(`Error extracting list items for attribute "${attributeName}": ${error.message}`);
-}
-await this.uiActions.keyPress("Escape", "Dismiss list"); // Return the list items as is if there are 2 or fewer items
-return allTexts;
+
+    // Get the list locators and filter the text content
+    const innerText = await this.getListLocatorsByID(id);
+    allTexts = StringUtil.filterArray(innerText);
+  } catch (error) {
+    console.error(`Error extracting list items for attribute "${attribute}": ${error.message}`);
+  }
+  
+  await this.uiActions.keyPress("Escape", "Dismiss list");
+  return allTexts;
 }
 
 public async getAllActualAttrs(): Promise<string[]> {
@@ -326,5 +338,50 @@ public async validateDocAttributes(documentClass: DocumentClass) : Promise<boole
     const actualAttrs = await this.getAllActualAttrs();    
     const isValid = StringUtil.validateListItems(expectedAttrs, actualAttrs);
     return isValid;
+}
+
+public async fillTextAttribute(attribute: Attribute, value?: string): Promise<void> {
+  const attr = await this.createAttributeInputSelector(attribute.attributeName);
+  const fillValue = value || attribute.defaultValue;
+  await this.uiActions.editBox(attr, attribute.attributeName).fill(fillValue);
+}
+
+public async fillListItem(attribute: Attribute, value?: string): Promise<void> {
+  const attr = await this.createAttributeInputSelector(attribute.attributeName);
+  const fillValue = value || attribute.defaultValue;
+  await this.uiActions.editBox(attr, attribute.attributeName).fill(fillValue);
+  await this.uiActions.keyPress("Enter", "Select list item");
+}
+
+public async fillAttribute(
+  attribute: Attribute, value?: string,
+) { 
+  if (attribute.dependant) {
+    const dependentAttr = this.dataBuilder.getAttributeByName(attribute.dependant);
+      await this.fillListItem(dependentAttr, dependentAttr.defaultValue);
+  }
+  switch (attribute.attributeType) {
+      case 'String':
+          await this.fillTextAttribute(attribute, value);
+          break;
+
+      case 'Date':
+           await this.fillTextAttribute(attribute, value);
+        break;
+
+      case 'List':
+          if (attribute.listValues) {
+              await this.fillListItem(attribute, value);
+          }
+          break;
+
+      case 'Approval':
+           await this.fillListItem(attribute, value);
+          break;
+
+      default:
+          console.warn(`Unknown attribute type: ${attribute.attributeType}`);
+          break;
+  } 
 }
 }

@@ -23,8 +23,8 @@ test.describe('[Security matrix - Viewer]', () => {
     });
 
     test.afterEach(async () => {
-        await TestUtils.checkBugs(); // Ensure bugs are resolved before closing the page
         await testClass.context.close(); // Close the page after resolving bugs
+        await TestUtils.checkBugs(); // Ensure bugs are resolved before closing the page
     });
 
     test('Verify that Viewer can not Access Document (Before Checker Approval)', async () => {
@@ -38,7 +38,7 @@ test.describe('[Security matrix - Viewer]', () => {
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(4);
             await testClass.homeSteps.navigateToBrowse();
-            await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+            await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
             const isVisible = await testClass.homeSteps.isFileVisible(fileName);
             if (isVisible) {
                 TestUtils.addBug(`Bug: added file is visible to Viewer under document : ${document.documentType} before checker approval`);
@@ -53,7 +53,7 @@ test.describe('[Security matrix - Viewer]', () => {
         await testClass.login.performLogin(4);
         await testClass.homeSteps.navigateToBrowse();
         try {
-            await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+            await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
             const isEnabled = await testClass.homeSteps.checkAddButtonEnabled();
             if (isEnabled) {
                 TestUtils.addBug(`Bug : Add button is enabled for Viewer under document ${document.documentType}`);
@@ -74,13 +74,13 @@ test.describe('[Security matrix - Viewer]', () => {
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(2);
             await testClass.homeSteps.navigateToBrowse();
-            await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+            await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
             await testClass.homeSteps.clickPropertiesButton(fileName);
             await testClass.properties.updateAttrAndSave(PropertiesPage.DOCUMENT_STATUS, "Approved");
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(4);
             await testClass.homeSteps.navigateToBrowse();
-            await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+            await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
             const enabled = await testClass.homeSteps.isDeleteButtonEnabled(fileName);
             if (enabled) {
                 TestUtils.addBug(`Bug : Delete button is enabled for viewer for document : ${document.documentType} while it should not be`);
@@ -101,13 +101,13 @@ test.describe('[Security matrix - Viewer]', () => {
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(2);
             await testClass.homeSteps.navigateToBrowse();
-            await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+            await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
             await testClass.homeSteps.clickPropertiesButton(fileName);
             await testClass.properties.updateAttrAndSave(PropertiesPage.DOCUMENT_STATUS, "Approved");
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(4);
             await testClass.homeSteps.navigateToBrowse();
-            await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+            await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
             const isEnabled = await testClass.homeSteps.isDeleteButtonEnabled(fileName);
             if (isEnabled) {
                 TestUtils.addBug(`Delete button is enabled for Viewer under document:  ${document.documentType} while it should not be`);
@@ -128,13 +128,13 @@ test.describe('[Security matrix - Viewer]', () => {
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(2);
             await testClass.homeSteps.navigateToBrowse();
-            await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+            await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
             await testClass.homeSteps.clickPropertiesButton(fileName);
             await testClass.properties.updateAttrAndSave(PropertiesPage.DOCUMENT_STATUS, "Approved");
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(4);
             await testClass.homeSteps.navigateToBrowse();
-            await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+            await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
             await testClass.homeSteps.clickPropertiesButton(fileName);
             await testClass.attributeUtil.checkAttrAreDisabledForDocClass(document);
             await testClass.properties.clickCancelButton();
@@ -154,13 +154,13 @@ test.describe('[Security matrix - Viewer]', () => {
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(2);
             await testClass.homeSteps.navigateToBrowse();
-            await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+            await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
             await testClass.homeSteps.clickPropertiesButton(fileName);
             await testClass.properties.updateAttrAndSave(PropertiesPage.DOCUMENT_STATUS, "Approved");
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(4);
             await testClass.homeSteps.navigateToBrowse();
-            await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+            await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
             await testClass.homeSteps.clickPropertiesButton(fileName);
             const isValid = await testClass.attributeUtil.validateDocAttributes(document);
             if (!isValid) {
@@ -183,13 +183,13 @@ test.describe('[Security matrix - Viewer]', () => {
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(2);
             await testClass.homeSteps.navigateToBrowse();
-            await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+            await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
             await testClass.homeSteps.clickPropertiesButton(fileName);
             await testClass.properties.updateAttrAndSave(PropertiesPage.DOCUMENT_STATUS, "Approved");
             await testClass.homeSteps.logOut();
             await testClass.login.performLogin(4);
             await testClass.homeSteps.navigateToBrowse();
-            await testClass.homeSteps.navigateToDocumentFolder(document.documentType);
+            await testClass.folderNavigationUtil.navigateToDocumentFolder(document.documentType);
             await testClass.homeSteps.openActionMenu(fileName);
             await testClass.uiActions.element(HomePage.CHECK_OUT_BUTTON, "Check Out Button").isDisabled();
         } catch (error) {

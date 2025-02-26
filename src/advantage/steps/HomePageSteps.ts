@@ -26,15 +26,20 @@ export default class HomePageSteps {
     }
 
     private async clickSideMenuButton() {
-        await this.waitForHomePageLoad();
-        await this.uiActions.element(HomePage.FEATURES_MENU, "Features Menu Button").waitTillVisible(5);
+        // await this.waitForHomePageLoad();
+       //  await this.uiActions.element(HomePage.FEATURES_MENU, "Features Menu Button").waitTillVisible(5);
         await this.uiActions.element(HomePage.SIDE_MENU_BUTTON, "Side Menu Button").waitForEnabled();
-        await this.uiActions.element(HomePage.SIDE_MENU_BUTTON, "Side Menu Button").click();
-        await this.verifyMenuIsOpened();
+        await this.uiActions.element(HomePage.SIDE_MENU_BUTTON, "Side Menu Button").jsClick();
+       //  await this.uiActions.keyPress("Enter", "Enter Key");
+       // await this.uiActions.pauseInSecs(3);
+        // await this.verifyMenuIsOpened();
     }
     private async clickBrowseButton() {
+        await this.clickSideMenuButton();
         await this.uiActions.waitForDomContentLoaded();
-        await this.uiActions.element(HomePage.BROWSE_BUTTON, "Browse Button").click();
+        await this.uiActions.element(HomePage.BROWSE_BUTTON, "Browse Button").jsClick();
+       // await this.uiActions.keyPress("Enter", "Enter Key");
+        // await this.uiActions.element(HomePage.BROWSE_BUTTON, "Browse Button").click();
         await this.uiActions.element(HomePage.TOTAL_COUNT, "Total count dev").waitTillVisible(5);
     }
 
@@ -118,10 +123,10 @@ export default class HomePageSteps {
 
     public async navigateToBrowse() {
         await this.waitForHomePageLoad();
-        await this.clickSideMenuButton();
-        await this.uiActions.element(HomePage.SIDE_MENU_LOADED, "Browse Button").waitTillVisible(5);
+       // await this.clickSideMenuButton();
+        // await this.uiActions.element(HomePage.SIDE_MENU_LOADED, "Browse Button").waitTillVisible(5);
         // await this.uiActions.waitForDomContentLoaded();
-        await this.verifyMenuIsOpened();
+        // await this.verifyMenuIsOpened();
         // await this.uiActions.waitForDomContentLoaded();
         await this.clickBrowseButton();
         // await this.uiActions.waitForDomContentLoaded();
@@ -157,15 +162,17 @@ export default class HomePageSteps {
     public async openAddDoc(documentClass: DocumentClass) {
         await this.folderNavigation.navigateToDocumentFolder(documentClass.documentType);
         await this.clickAddDocumentButton(documentClass);
+        await this.uiActions.pauseInSecs(2);
     }
     
-    public async navigateToDocumentFolder(folderName: string) {
-        await this.folderNavigation.navigateToFolder(folderName);
-    }
+    // public async navigateToDocumentFolder(folderName: string) {
+    //     await this.folderNavigation.navigateToFolder(folderName);
+    // }
 
     public async clickAddDocumentButton(documentClass: DocumentClass) {
         await this.uiActions.element(HomePage.ADD_DOCUMENT_BUTTON, "Add Document Button").click();
         await this.uiActions.element(HomePage.ADD_DOCUMENT_WINDOWS_DIV, "Add Document Window").isVisible(60);
+        // await this.uiActions.waitForDomContentLoaded();
         await this.addDocumentSteps.selectEntryTemplate(documentClass.documentType);
     }
 
