@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import test, { Page } from "@playwright/test";
 import APIActions from "@apiActions/APIActions";
 import SOAPResponse from "@apiActions/SOAPResponse";
@@ -15,7 +16,7 @@ export default class AccountServiceSteps {
         operation: string): Promise<SOAPResponse> {
         let response: SOAPResponse;
         await test.step(`SOAP request to ${operation}`, async () => {
-            const requestHeaders = this.api.header.set(SOAPConstants.CONTENT_TYPE, SOAPConstants.CONTENT_TEXT).get();
+            const requestHeaders = this.api.header.set(SOAPConstants.CONTENT_TYPE, SOAPConstants.CONTENT_TEXT).set(SOAPConstants.ACTION_TEXT, SOAPConstants.SOAP_ACTION).get();
             response = await this.api.soap.post(endPoint, requestHeaders, requestBody, requestData, operation);
         });        
         return response;

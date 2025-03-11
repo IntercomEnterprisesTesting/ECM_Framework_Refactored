@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import {
      test, expect, Locator, 
     } from '@playwright/test';
@@ -239,6 +240,26 @@ export default class Assert {
             }
         });
     }
+
+    public static assertStringFormat(actual: string, expectedFormat: string) {
+        // Remove curly brackets if present
+        actual = actual.replace(/^{|}$/g, '');
+    
+        // Convert format "8-4-4-4-12" to regex pattern
+        const regex = this.createRegexFromFormat(expectedFormat);
+        
+        expect(actual).toMatch(regex);
+      }
+
+      private static createRegexFromFormat(format: string): RegExp {
+        const pattern = format
+          .split('-')
+          .map((group) => `[A-Fa-f0-9]{${parseInt(group, 10)}}`) // Convert each part to numeric length
+          .join('-');
+    
+        return new RegExp(`^${pattern}$`);
+      }
+      
     /**
      * To verify that an element identified by a selector is visible
      * @param selector - the selector of the element to check

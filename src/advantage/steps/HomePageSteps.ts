@@ -103,6 +103,7 @@ export default class HomePageSteps {
         await this.uiActions.element(HomePage.PROPERTIES_BUTTON, "Properties Button").click();
         await this.uiActions.waitForDomContentLoaded();
         await this.uiActions.element(HomePage.PROPERTIES_WINDOW_DIV, "Properties Window").waitTillVisible(5);
+        await this.uiActions.waitForDomContentLoaded();
     } 
 
     public async checkOutFile(fileName: string) {

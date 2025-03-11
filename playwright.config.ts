@@ -52,7 +52,7 @@ const config: PlaywrightTestConfig = {
     ["./src/framework/logger/TestListener.ts"],
     ['monocart-reporter', {
       name: "Automation Report",
-      outputFile: './test-results/report/execution.html',
+      outputFile: './test-results/report/execution/execution.html',
     }],
   ],
   projects: [  

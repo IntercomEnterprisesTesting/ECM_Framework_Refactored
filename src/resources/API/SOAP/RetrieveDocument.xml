@@ -1,0 +1,11 @@
+<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:int="http://intercom.eg">
+   <soapenv:Header/>
+   <soapenv:Body>
+     <int:retreiveDocument soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+         <DocID xsi:type="xsd:string">"{{docID}}</DocID>
+         <objectStore xsi:type="xsd:string">{objectStore}</objectStore>
+         <username xsi:type="xsd:string">{userName}</username>
+         <password xsi:type="xsd:string">{password}</password>
+      </int:retreiveDocument>   
+       </soapenv:Body>
+</soapenv:Envelope>

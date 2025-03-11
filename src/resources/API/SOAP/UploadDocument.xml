@@ -1,0 +1,15 @@
+<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:int="http://intercom.eg">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <int:archiving_Document soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+         <fileName xsi:type="xsd:string">{fileName}</fileName>
+         <Folderpath xsi:type="xsd:string">{folderPath}</Folderpath>
+         <documentClassName xsi:type="xsd:string">{documentClassName}</documentClassName>
+         <fileContent xsi:type="xsd:base64Binary">{fileContent}</fileContent>
+         <properties xsi:type="xsd:string">{properties}</properties>
+         <objectStore xsi:type="xsd:string">{objectStore}</objectStore>
+         <username xsi:type="xsd:string">{userName}</username>
+         <password xsi:type="xsd:string">{password}</password>
+      </int:archiving_Document>
+   </soapenv:Body>
+</soapenv:Envelope>
